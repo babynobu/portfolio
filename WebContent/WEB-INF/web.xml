@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+
+	<servlet>
+		<servlet-name>LogIn</servlet-name>
+		<servlet-class>controller.LogIn</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LogIn</servlet-name>
+		<url-pattern>/LogIn</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ExecuteLogin</servlet-name>
+		<servlet-class>controller.ExecuteLogin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExecuteLogin</servlet-name>
+		<url-pattern>/ExecuteLogin</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>GeneralDashboard</servlet-name>
+		<servlet-class>controller.GeneralDashboard</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GeneralDashboard</servlet-name>
+		<url-pattern>/GeneralDashboard</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ManagerDashboard</servlet-name>
+		<servlet-class>controller.ManagerDashboard</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ManagerDashboard</servlet-name>
+		<url-pattern>/ManagerDashboard</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>LogOut</servlet-name>
+		<servlet-class>controller.LogOut</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LogOut</servlet-name>
+		<url-pattern>/LogOut</url-pattern>
+	</servlet-mapping>
+
+
+</web-app>
