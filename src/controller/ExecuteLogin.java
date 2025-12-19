@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.BusinessLogic;
+import model.LoginBL;
 import model.UserInfoDto;
 
 public class ExecuteLogin extends HttpServlet{
@@ -66,15 +66,15 @@ public class ExecuteLogin extends HttpServlet{
 		//エラーならログイン画面に戻る
 
 		//リクエストパラメータからユーザー入力値を取得
-		String userId = request.getParameter("USER_ID");		//リクエストパラメータ（USER_ID）
+		String loginId = request.getParameter("LOGIN_ID");		//リクエストパラメータ（LOGIN_ID）
 		String userPass = request.getParameter("PASSWORD");		//リクエストパラメータ（PASSWORD）
 
 		//DBに接続して合致するデータを出力
-		BusinessLogic logic = new BusinessLogic();
-		UserInfoDto dto  = logic.userInfoExtracted(userId,userPass);
+		LoginBL logic = new LoginBL();
+		UserInfoDto dto  = logic.userInfoExtracted(loginId,userPass);
 
 		//返ってきたらログイン
-		if (dto != null && dto.getUserId() != null) {
+		if (dto != null && dto.getLoginId() != null) {
 
 			//セッションにログイン情報を格納
 			HttpSession session = request.getSession(true);

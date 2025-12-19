@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,7 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.StampInfoDto;
 import model.UserInfoDto;
+import model.monthlyGoodStampBL;
+import model.yearlyGoodStampBL;
 
 public class GeneralDashboard extends HttpServlet{
 
@@ -24,8 +29,28 @@ public class GeneralDashboard extends HttpServlet{
 		response.setContentType("text/html;charset=UTF-8");	//文字コードをUTF-8に指定
 
 		if (userInfoOnSession != null) {
-			//一般ダッシュボード画面にフォワード
+			//一般
 			if ( userInfoOnSession.getRole() == 0 ) {
+
+				//いいね件数を取得
+				yearlyGoodStampBL yi = new yearlyGoodStampBL();
+				monthlyGoodStampBL mi = new monthlyGoodStampBL();
+
+				List<StampInfoDto> yearlyList = new ArrayList();
+				List<StampInfoDto> monthlyList = new ArrayList();
+
+				int userId = userInfoOnSession.getUserId();
+
+				yearlyList = yi.yearlyStampInfo(userId);
+				monthlyList = mi.monthlyStampInfo(userId);
+
+				int yearlyCount = yearlyList.size();
+				int monthlyCount = monthlyList.size();
+
+				request.setAttribute("YEARLY_COUNT", yearlyCount);
+				request.setAttribute("MONTHLY_COUNT", monthlyCount);
+
+				//ダッシュボード画面にフォワード
 				RequestDispatcher dispatch =
 						request.getRequestDispatcher("/WEB-INF/view/GeneralDashboard.jsp");
 				dispatch.forward(request, response);

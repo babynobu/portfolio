@@ -11,7 +11,8 @@ public class UserInfoDto {
 	 * フィールド
 	 -----------------------*/
 
-	private String userId ;
+	private int userId ;
+	private String loginId ;
 	private String userName ;
 	private String userPass ;
 	private int role ;
@@ -20,11 +21,17 @@ public class UserInfoDto {
 	 * getter/setter
 	 -----------------------*/
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	public String getLoginId() {
+		return loginId;
+	}
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
 	}
 	public String getUserName() {
 		return userName;
@@ -44,6 +51,9 @@ public class UserInfoDto {
 	public void setRole(int role) {
 		this.role = role;
 	}
+
+
+
 
 
 

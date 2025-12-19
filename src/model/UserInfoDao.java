@@ -41,7 +41,7 @@ public class UserInfoDao {
 	 *----------------------------------------------------------------------**/
 
 
-	public UserInfoDto doSelect(String inputUserId, String inputPassWord) {
+	public UserInfoDto doSelect(String inputLoginId, String inputPassWord) {
 
 		//-------------------------------------------
 		//JDBCドライバのロード
@@ -63,7 +63,6 @@ public class UserInfoDao {
 		ResultSet         rs  = null ;   // ResultSet（SQL抽出結果）格納用変数
 
 		//抽出データ（UserInfoDto型）格納用変数
-		//※最終的にreturnするため、tryブロック内で宣言してはいけないことに注意
 		UserInfoDto dto = null;
 
 		try {
@@ -79,23 +78,24 @@ public class UserInfoDao {
 
 			//発行するSQL文の生成（SELECT）
 			StringBuffer buf = new StringBuffer();
-			buf.append(" SELECT             ");
-			buf.append("   LOGIN_ID,        ");
-			buf.append("   USER_NAME,       ");
-			buf.append("   PASSWORD,        ");
-			buf.append("   ROLE             ");
-			buf.append(" FROM               ");
-			buf.append("   USERS            ");
-			buf.append(" WHERE              ");
-			buf.append("   LOGIN_ID  = ? AND ");  //第1パラメータ
-			buf.append("   PASSWORD = ?     ");  //第2パラメータ
+			buf.append(" SELECT               ");
+			buf.append("   USER_ID,          ");
+			buf.append("   LOGIN_ID,          ");
+			buf.append("   USER_NAME,         ");
+			buf.append("   PASSWORD,          ");
+			buf.append("   ROLE               ");
+			buf.append(" FROM                 ");
+			buf.append("   USERS              ");
+			buf.append(" WHERE                ");
+			buf.append("   LOGIN_ID  = ? AND  ");  //第1パラメータ
+			buf.append("   PASSWORD = ?       ");  //第2パラメータ
 
 			//PreparedStatement（SQL発行用オブジェクト）を生成＆発行するSQLをセット
 			ps = con.prepareStatement(buf.toString());
 
 			//パラメータをセット
-			ps.setString( 1, inputUserId   );  //第1パラメータ：ユーザーID（ユーザー入力）
-			ps.setString( 2, inputPassWord );  //第2パラメータ：ユーザーパスワード（ユーザー入力）
+			ps.setString( 1, inputLoginId   );  //第1パラメータ：ログインID（ユーザー入力）
+			ps.setString( 2, inputPassWord );  //第2パラメータ：パスワード（ユーザー入力）
 
 			//SQL文の送信＆戻り値としてResultSet（SQL抽出結果）を取得
 			rs = ps.executeQuery();
@@ -106,10 +106,11 @@ public class UserInfoDao {
 			if (rs.next()) {
 				dto = new UserInfoDto();
 				//ResultSetから1行分のレコード情報をDTOへ登録
-				dto.setUserId(   rs.getString("LOGIN_ID")   );    //ユーザーID
-				dto.setUserName( rs.getString("USER_NAME") );    //ユーザー名
-				dto.setUserPass( rs.getString("PASSWORD")  );    //ユーザーパスワード
-				dto.setRole( rs.getInt("ROLE")  );    //ユーザーパスワード
+				dto.setUserId( rs.getInt("USER_ID"));			//ユーザーID
+				dto.setLoginId( rs.getString("LOGIN_ID")   );	//ログインID
+				dto.setUserName( rs.getString("USER_NAME") );	//ユーザー名
+				dto.setUserPass( rs.getString("PASSWORD")  );	//パスワード
+				dto.setRole( rs.getInt("ROLE")  );				//ユーザー権限
 			}
 
 		} catch (SQLException e) {
