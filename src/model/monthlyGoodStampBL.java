@@ -14,7 +14,7 @@ public class monthlyGoodStampBL {
 	 * ■monthlyStampInfoメソッド
 	 * DBに接続し、引数に紐づくいいね情報を抽出
 	 * 引数	 ；ユーザーID（int型）
-	 * 戻り値：タイム情報（List<StampInfoDto>型）
+	 * 戻り値：いいねNo.、タイム情報（List<StampInfoDto>型）
 	 -----------------------------------------------------*/
 
 	public List<StampInfoDto> monthlyStampInfo(int id){

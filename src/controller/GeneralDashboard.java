@@ -33,16 +33,16 @@ public class GeneralDashboard extends HttpServlet{
 			if ( userInfoOnSession.getRole() == 0 ) {
 
 				//いいね件数を取得
-				yearlyGoodStampBL yi = new yearlyGoodStampBL();
-				monthlyGoodStampBL mi = new monthlyGoodStampBL();
+				yearlyGoodStampBL yg = new yearlyGoodStampBL();
+				monthlyGoodStampBL mg = new monthlyGoodStampBL();
 
-				List<StampInfoDto> yearlyList = new ArrayList();
-				List<StampInfoDto> monthlyList = new ArrayList();
+				List<StampInfoDto> yearlyList = new ArrayList<>();
+				List<StampInfoDto> monthlyList = new ArrayList<>();
 
 				int userId = userInfoOnSession.getUserId();
 
-				yearlyList = yi.yearlyStampInfo(userId);
-				monthlyList = mi.monthlyStampInfo(userId);
+				yearlyList = yg.yearlyStampInfo(userId);
+				monthlyList = mg.monthlyStampInfo(userId);
 
 				int yearlyCount = yearlyList.size();
 				int monthlyCount = monthlyList.size();

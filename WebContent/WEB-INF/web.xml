@@ -47,5 +47,32 @@
 		<url-pattern>/LogOut</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>AccountList</servlet-name>
+		<servlet-class>controller.AccountList</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AccountList</servlet-name>
+		<url-pattern>/AccountList</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>AccountAdd</servlet-name>
+		<servlet-class>controller.AccountAdd</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AccountAdd</servlet-name>
+		<url-pattern>/AccountAdd</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ExecuteAccountAdd</servlet-name>
+		<servlet-class>controller.ExecuteAccountAdd</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExecuteAccountAdd</servlet-name>
+		<url-pattern>/ExecuteAccountAdd</url-pattern>
+	</servlet-mapping>
+
 
 </web-app>

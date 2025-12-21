@@ -11,12 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.AccountListBL;
+import model.AccountListDto;
 import model.UserInfoDto;
-import model.UserStampCountDto;
-import model.monthlyGoodStampRankingBL;
-import model.yearlyGoodStampRankingBL;
 
-public class ManagerDashboard extends HttpServlet{
+public class AccountList extends HttpServlet{
 
 	protected void doGet(HttpServletRequest request,HttpServletResponse response)
 			throws ServletException,IOException{
@@ -32,22 +31,18 @@ public class ManagerDashboard extends HttpServlet{
 			//管理者
 			if ( userInfoOnSession.getRole() == 1 ) {
 
-				//いいねランキングを取得
-				yearlyGoodStampRankingBL ygr = new yearlyGoodStampRankingBL();
-				monthlyGoodStampRankingBL mgr = new monthlyGoodStampRankingBL();
+				//アカウント一覧を取得
+				//インスタンス化
+				AccountListBL al = new AccountListBL();
+				List<AccountListDto> accountList = new ArrayList<>();
+				//メソッド起動
+				accountList = al.selectAccountList();
+				//リクエストにアカウント情報を格納
+				request.setAttribute("ACCOUNT_LIST", accountList);
 
-				List<UserStampCountDto> yearlyList = new ArrayList<>();
-				List<UserStampCountDto> monthlyList = new ArrayList<>();
-
-				yearlyList = ygr.yearlyStampRankingInfo();
-				monthlyList = mgr.monthlyStampRankingInfo();
-
-				request.setAttribute("YEARLY_RANKING", yearlyList);
-				request.setAttribute("MONTHLY_RANKING", monthlyList);
-
-				//ダッシュボード画面にフォワード
+				//アカウント一覧画面にフォワード
 				RequestDispatcher dispatch =
-						request.getRequestDispatcher("/WEB-INF/view/ManagerDashboard.jsp");
+						request.getRequestDispatcher("/WEB-INF/view/accountList.jsp");
 				dispatch.forward(request, response);
 				//一般
 			}else if ( userInfoOnSession.getRole() == 0 ) {
@@ -64,8 +59,6 @@ public class ManagerDashboard extends HttpServlet{
 		} else {
 			response.sendRedirect(request.getContextPath() + "/LogIn");
 		}
-
 	}
+
 }
-
-

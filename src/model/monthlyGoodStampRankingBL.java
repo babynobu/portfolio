@@ -4,27 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**----------------------------------------------------------------------*
- *■■■yearlyGoodStampBLクラス■■■
+ *■■■monthlyGoodStampRankingBLクラス■■■
  *概要：ビジネスロジック（ユーザーデータの抽出）
  *----------------------------------------------------------------------**/
 
-public class yearlyGoodStampBL {
+public class monthlyGoodStampRankingBL {
 
 	/**----------------------------------------------------
-	 * ■yearlyStampInfoメソッド
+	 * ■monthlyStampRankingInfoメソッド
 	 * DBに接続し、引数に紐づくいいね情報を抽出
-	 * 引数	 ；ユーザーID（int型）
-	 * 戻り値：いいねNo.、タイム情報（List<StampInfoDto>型）
+	 * 引数	 ；なし
+	 * 戻り値：userId,いいね数,（List<UserStampCountDto>型）
 	 -----------------------------------------------------*/
 
-	public List<StampInfoDto> yearlyStampInfo(int id){
+	public List<UserStampCountDto> monthlyStampRankingInfo(){
 
 		//戻り値用の型を生成
-		List<StampInfoDto> list = new ArrayList();
+		List<UserStampCountDto> list = new ArrayList();
 
 		//DB接続
-		StampInfoDao dao = new StampInfoDao();
-		list = dao.yearlyGetStampInfo(id);
+		UserStampCountDao dao = new UserStampCountDao();
+		list = dao.monthlyGetStampRanking();
 
 		return list;
 	}
