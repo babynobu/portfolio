@@ -5,7 +5,7 @@ package model;
  *概要：ビジネスロジック（アカウントの追加）
  *----------------------------------------------------------------------**/
 
-public class AccountAddBL {
+public class AccountEditBL {
 
 	/**----------------------------------------------------
 	 * ■accountAddメソッド
@@ -14,13 +14,13 @@ public class AccountAddBL {
 	 * 戻り値：処理結果（true/false）
 	 -----------------------------------------------------*/
 
-	public boolean accountAdd(AccountCRUDDto dto){
+	public boolean accountEdit(AccountCRUDDto dto){
 
 		boolean result = true;
 
 		//DB接続
 		AccountCRUDDao dao = new AccountCRUDDao();
-		result = dao.insertAccount(dto);
+		result = dao.updateAccount(dto);
 
 		return result;
 	}

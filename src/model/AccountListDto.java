@@ -14,6 +14,7 @@ public class AccountListDto {
 	private int userId ;
 	private String userName  ;
 	private String userNameKana ;
+	private int role;
 	private String email ;
 	private int status ;
 
@@ -39,6 +40,16 @@ public class AccountListDto {
 	public void setUserNameKana(String userNameKana) {
 		this.userNameKana = userNameKana;
 	}
+	public int getRole() {
+		return role;
+	}
+	public void setRole(int role) {
+		this.role = role;
+	}
+	//表示用メソッド
+	public String getRoleLabel() {
+	    return (role == 1) ? "管理者" : "一般";
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -50,6 +61,10 @@ public class AccountListDto {
 	}
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	//表示用メソッド
+	public String getStatusLabel() {
+	    return (status == 1) ? "有効" : "無効";
 	}
 
 }

@@ -5,7 +5,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>アカウント追加</title>
+<title>アカウント編集</title>
 
 <style>
 .role-area {
@@ -23,21 +23,22 @@
 
 <body>
 
-<h2>アカウント追加</h2>
+<h2>アカウント編集</h2>
 
-<form action="<%=request.getContextPath()%>/ExecuteAccountAdd"
+<form action="<%=request.getContextPath()%>/ExecuteAccountEdit"
       method="post"
       enctype="multipart/form-data">
+      <input type="hidden" name="userId" value="${account.userId}">
 
     <!-- ===== 権限選択 ===== -->
     <label>
-        <input type="radio" name="role" value="admin"
-            ${param.role == 'admin' ? 'checked' : ''}>
+        <input type="radio" name="role" value="1"
+            ${(empty param.role ? account.role : param.role) == '1' ? 'checked' : ''}>
         管理者
     </label>
     <label>
-        <input type="radio" name="role" value="general"
-            ${param.role == 'general' ? 'checked' : ''}>
+        <input type="radio" name="role" value="0"
+            ${(empty param.role ? account.role : param.role) == '0' ? 'checked' : ''}>
         一般
     </label>
 
@@ -49,24 +50,8 @@
     <h3>共通項目</h3>
 
     <p>
-        ログインID<br>
-        <input type="text" name="loginId" value="${param.loginId}">
-    </p>
-    <c:if test="${not empty errors.loginId}">
-        <div class="error">${errors.loginId}</div>
-    </c:if>
-
-    <p>
-        パスワード<br>
-        <input type="password" name="password">
-    </p>
-    <c:if test="${not empty errors.password}">
-        <div class="error">${errors.password}</div>
-    </c:if>
-
-    <p>
         名前<br>
-        <input type="text" name="name" value="${param.name}">
+        <input type="text" name="name" value="${empty param.name ? account.name : param.name}">
     </p>
     <c:if test="${not empty errors.name}">
         <div class="error">${errors.name}</div>
@@ -74,7 +59,7 @@
 
     <p>
         ふりがな<br>
-        <input type="text" name="kana" value="${param.kana}">
+        <input type="text" name="kana" value="${empty param.kana ? account.kana : param.kana}">
     </p>
     <c:if test="${not empty errors.kana}">
         <div class="error">${errors.kana}</div>
@@ -82,7 +67,7 @@
 
     <p>
         メールアドレス<br>
-        <input type="email" name="email" value="${param.email}">
+        <input type="email" name="email" value="${empty param.email ? account.email : param.email}">
     </p>
     <c:if test="${not empty errors.email}">
         <div class="error">${errors.email}</div>
@@ -92,12 +77,12 @@
         アカウントステータス<br>
         <label>
             <input type="radio" name="status" value="1"
-                ${param.status == '1' ? 'checked' : ''}>
+                ${ (empty param.status ? account.status : param.status) == 1 ? 'checked' : '' }>
             有効
         </label>
         <label>
             <input type="radio" name="status" value="0"
-                ${param.status == '0' ? 'checked' : ''}>
+                ${ (empty param.status ? account.status : param.status) == 0 ? 'checked' : '' }>
             無効
         </label>
     </p>
@@ -121,17 +106,17 @@
             性別<br>
             <label>
                 <input type="radio" name="gender" value="1"
-                    ${param.gender == '1' ? 'checked' : ''}>
+                    ${ (empty param.gender ? account.gender : param.gender) == 1 ? 'checked' : '' }>
                 男性
             </label>
             <label>
                 <input type="radio" name="gender" value="2"
-                    ${param.gender == '2' ? 'checked' : ''}>
+                    ${ (empty param.gender ? account.gender : param.gender) == 2 ? 'checked' : '' }>
                 女性
             </label>
             <label>
                 <input type="radio" name="gender" value="3"
-                    ${param.gender == '3' ? 'checked' : ''}>
+                    ${ (empty param.gender ? account.gender : param.gender) == 3 ? 'checked' : '' }>
                 その他
             </label>
         </p>
@@ -142,7 +127,7 @@
         <!-- 生年月日 -->
         <p>
             生年月日<br>
-            <input type="date" name="birthday">
+            <input type="date" name="birthday" value="${empty param.birthday ? account.birthday : param.birthday}">
         </p>
         <c:if test="${not empty errors.birthday}">
             <div class="error">${errors.birthday}</div>
@@ -151,7 +136,7 @@
 		<!-- 自己紹介 -->
         <p>
             自己紹介<br>
-            <textarea name="introduction">${param.introduction}</textarea>
+            <textarea name="introduction">${empty param.introduction ? account.introduction : param.introduction}</textarea>
         </p>
         <c:if test="${not empty errors.introduction}">
             <div class="error">${errors.introduction}</div>
@@ -168,11 +153,11 @@
     </div>
 
     <p>
-        <input type="submit" value="登録">
+        <input type="submit" value="更新">
     </p>
 </form>
 
-<form action="<%=request.getContextPath()%>/ManagerDashboard">
+<form action="<%=request.getContextPath()%>/AccountList">
     <button type="submit">戻る</button>
 </form>
 
@@ -182,8 +167,8 @@ const adminArea   = document.getElementById('adminArea');
 const generalArea = document.getElementById('generalArea');
 
 function switchRole(role) {
-    adminArea.style.display   = role === 'admin'   ? 'block' : 'none';
-    generalArea.style.display = role === 'general' ? 'block' : 'none';
+    adminArea.style.display   = role === '1'   ? 'block' : 'none';
+    generalArea.style.display = role === '0' ? 'block' : 'none';
 }
 
 // 初期表示

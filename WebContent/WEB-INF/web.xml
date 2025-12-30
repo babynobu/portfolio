@@ -74,5 +74,32 @@
 		<url-pattern>/ExecuteAccountAdd</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>AccountEdit</servlet-name>
+		<servlet-class>controller.AccountEdit</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AccountEdit</servlet-name>
+		<url-pattern>/AccountEdit</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>AccountAction</servlet-name>
+		<servlet-class>controller.AccountAction</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AccountAction</servlet-name>
+		<url-pattern>/AccountAction</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ExecuteAccountEdit</servlet-name>
+		<servlet-class>controller.ExecuteAccountEdit</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExecuteAccountEdit</servlet-name>
+		<url-pattern>/ExecuteAccountEdit</url-pattern>
+	</servlet-mapping>
+
 
 </web-app>

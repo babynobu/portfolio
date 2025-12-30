@@ -15,16 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import model.AccountAddBL;
 import model.AccountCRUDDto;
+import model.AccountEditBL;
 import model.UserInfoDto;
 
 @MultipartConfig
-public class ExecuteAccountAdd extends HttpServlet {
+public class ExecuteAccountEdit extends HttpServlet {
 
     /**-----------------------------------------------
-     * ■■■ExecuteAccountAddクラス■■■
-     * 概要：アカウント追加処理
+     * ■■■ExecuteAccountEditクラス■■■
+     * 概要：アカウント編集処理
      -----------------------------------------------*/
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -59,8 +59,7 @@ public class ExecuteAccountAdd extends HttpServlet {
 
         // ===== 共通パラメータ =====
         String role     = request.getParameter("role");
-        String loginId  = request.getParameter("loginId");
-        String password = request.getParameter("password");
+        String userId     = request.getParameter("userId");
         String name     = request.getParameter("name");
         String kana     = request.getParameter("kana");
         String email    = request.getParameter("email");
@@ -78,15 +77,6 @@ public class ExecuteAccountAdd extends HttpServlet {
         }
 
         // ===== 共通バリデーション =====
-        if (loginId == null || loginId.isEmpty()) {
-            errors.put("loginId", "ログインIDは必須です。");
-        }
-
-        if (password == null || password.isEmpty()) {
-            errors.put("password", "パスワードは必須です。");
-        } else if (password.length() < 8) {
-            errors.put("password", "パスワードは8文字以上にしてください。");
-        }
 
         if (name == null || name.isEmpty()) {
             errors.put("name", "名前は必須です。");
@@ -113,7 +103,7 @@ public class ExecuteAccountAdd extends HttpServlet {
         }
 
         // ===== 一般ユーザー専用 =====
-        if ("general".equals(role)) {
+        if ("0".equals(role)) {
 
             gender = request.getParameter("gender");
             String birthdayStr = request.getParameter("birthday");
@@ -143,7 +133,7 @@ public class ExecuteAccountAdd extends HttpServlet {
                 errors.put("introduction", "自己紹介は1500文字以内で入力してください。");
             }
 
-        } else if (!"admin".equals(role)) {
+        } else if (!"1".equals(role)) {
             // 想定外（改ざん対策）
             errors.put("role", "不正な権限が指定されました。");
         }
@@ -157,6 +147,7 @@ public class ExecuteAccountAdd extends HttpServlet {
         // ===== ここまで来たら入力はOK =====
 
         // ===== プロフィール画像の受け取り・保存 =====
+
         Part imagePart = request.getPart("profileImage");   // input name="profileImage"
 
         if (imagePart != null && imagePart.getSize() > 0) {
@@ -193,36 +184,35 @@ public class ExecuteAccountAdd extends HttpServlet {
         AccountCRUDDto dto = new AccountCRUDDto();
 
         dto.setRole(role);
-        dto.setLoginId(loginId);
-        dto.setPassword(password);
+        dto.setUserId(userId);
         dto.setName(name);
         dto.setKana(kana);
         dto.setEmail(email);
         dto.setStatus(status);
 
-
-
-        if ("general".equals(role)) {
+        if ("0".equals(role)) {
             dto.setGender(gender);
             dto.setBirthday(parsedBirthday);
             dto.setIntroduction(introduction);
             //画像を受け取る
-            dto.setProfileImagePath(profileImagePath);
+            if (profileImagePath != null) {
+                dto.setProfileImagePath(profileImagePath);
+            }
         }
 
-        AccountAddBL logic = new AccountAddBL();
+        AccountEditBL logic = new AccountEditBL();
 
         try {
-            boolean result = logic.accountAdd(dto);
+            boolean result = logic.accountEdit(dto);
 
             if (result) {
                 RequestDispatcher rd =
-                        request.getRequestDispatcher("/WEB-INF/view/accountAddComplete.jsp");
+                        request.getRequestDispatcher("/WEB-INF/view/accountEditComplete.jsp");
                 rd.forward(request, response);
             } else {
                 request.setAttribute("errorMessage", "登録処理に失敗しました。");
                 RequestDispatcher rd =
-                        request.getRequestDispatcher("/WEB-INF/view/accountAdd.jsp");
+                        request.getRequestDispatcher("/WEB-INF/view/accountEdit.jsp");
                 rd.forward(request, response);
             }
 
@@ -243,7 +233,7 @@ public class ExecuteAccountAdd extends HttpServlet {
 
         request.setAttribute("errors", errors);
         RequestDispatcher rd =
-                request.getRequestDispatcher("/WEB-INF/view/accountAdd.jsp");
+                request.getRequestDispatcher("/WEB-INF/view/accountEdit.jsp");
         rd.forward(request, response);
     }
 }

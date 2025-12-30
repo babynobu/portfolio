@@ -52,22 +52,34 @@ public class ExecuteLogin extends HttpServlet{
 		}
 
 		//レスポンス（出力データ）の文字コードを設定
-		response.setContentType("text/html;charset=UTF-8");	//文字コードをUTF-8に指定
-
+		response.setContentType("text/html;charset=UTF-8");
 		//リクエスト（受信データ）の文字コードを設定
-		request.setCharacterEncoding("UTF-8");				//文字コードをUTF-8に指定
-
-
-
-		//未ログイン
-
-		//送信された情報をDBに接続して送る
-		//返ってきたらログイン
-		//エラーならログイン画面に戻る
+		request.setCharacterEncoding("UTF-8");
 
 		//リクエストパラメータからユーザー入力値を取得
-		String loginId = request.getParameter("LOGIN_ID");		//リクエストパラメータ（LOGIN_ID）
-		String userPass = request.getParameter("PASSWORD");		//リクエストパラメータ（PASSWORD）
+		String loginId = request.getParameter("LOGIN_ID");
+		String userPass = request.getParameter("PASSWORD");
+
+		//サーバー側バリデーション
+	    boolean hasError = false;
+
+	    if (loginId == null || loginId.isEmpty()) {
+	        hasError = true;
+	    } else if (loginId.length() > 255) {
+	        hasError = true;
+	    }
+
+	    if (userPass == null || userPass.isEmpty()) {
+	        hasError = true;
+	    } else if (!userPass.matches("^[0-9a-zA-Z_-]{8,32}$")) {
+	        hasError = true;
+	    }
+
+	    if (hasError) {
+	        // 入力不正 → ログイン画面へ戻す
+	        response.sendRedirect(request.getContextPath() + "/LogIn");
+	        return;
+	    }
 
 		//DBに接続して合致するデータを出力
 		LoginBL logic = new LoginBL();
