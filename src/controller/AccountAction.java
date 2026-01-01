@@ -39,9 +39,20 @@ public class AccountAction extends HttpServlet {
                     + "}"
                 );
 
+
+            } else if ("restore".equals(action)) {
+
+                dao.restore(userId);
+                out.print("{\"result\":\"ok\"}");
+
             } else if ("delete".equals(action)) {
 
                 dao.logicalDelete(userId);
+                out.print("{\"result\":\"ok\"}");
+
+            } else if ("physicsDelete".equals(action)) {
+
+                dao.physicsDelete(userId);
                 out.print("{\"result\":\"ok\"}");
 
             } else {

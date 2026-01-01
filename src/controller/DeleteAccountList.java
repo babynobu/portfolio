@@ -11,12 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.StampInfoDto;
+import model.AccountListDto;
+import model.DeleteAccountListBL;
 import model.UserInfoDto;
-import model.monthlyGoodStampBL;
-import model.yearlyGoodStampBL;
 
-public class GeneralDashboard extends HttpServlet{
+public class DeleteAccountList extends HttpServlet{
 
 	protected void doGet(HttpServletRequest request,HttpServletResponse response)
 			throws ServletException,IOException{
@@ -29,34 +28,25 @@ public class GeneralDashboard extends HttpServlet{
 		response.setContentType("text/html;charset=UTF-8");	//文字コードをUTF-8に指定
 
 		if (userInfoOnSession != null) {
-			//一般
-			if ( userInfoOnSession.getRole() == 0 ) {
+			//管理者
+			if ( userInfoOnSession.getRole() == 1 ) {
 
-				//いいね件数を取得
-				yearlyGoodStampBL yg = new yearlyGoodStampBL();
-				monthlyGoodStampBL mg = new monthlyGoodStampBL();
+				//アカウント一覧を取得
+				//インスタンス化
+				DeleteAccountListBL al = new DeleteAccountListBL();
+				List<AccountListDto> accountList = new ArrayList<>();
+				//メソッド起動
+				accountList = al.selectDeleteAccountList();
+				//リクエストにアカウント情報を格納
+				request.setAttribute("ACCOUNT_LIST", accountList);
 
-				List<StampInfoDto> yearlyList = new ArrayList<>();
-				List<StampInfoDto> monthlyList = new ArrayList<>();
-
-				int userId = userInfoOnSession.getUserId();
-
-				yearlyList = yg.yearlyStampInfo(userId);
-				monthlyList = mg.monthlyStampInfo(userId);
-
-				int yearlyCount = yearlyList.size();
-				int monthlyCount = monthlyList.size();
-
-				request.setAttribute("YEARLY_COUNT", yearlyCount);
-				request.setAttribute("MONTHLY_COUNT", monthlyCount);
-
-				//ダッシュボード画面にフォワード
+				//アカウント一覧画面にフォワード
 				RequestDispatcher dispatch =
-						request.getRequestDispatcher("/WEB-INF/view/generalDashboard.jsp");
+						request.getRequestDispatcher("/WEB-INF/view/deleteAccountList.jsp");
 				dispatch.forward(request, response);
-				//管理者
-			}else if ( userInfoOnSession.getRole() == 1 ) {
-				response.sendRedirect(request.getContextPath() + "/ManagerDashboard");
+				//一般
+			}else if ( userInfoOnSession.getRole() == 0 ) {
+				response.sendRedirect(request.getContextPath() + "/GeneralDashboard");
 				// 想定外の値（0でも1でもない）
 			}else {
 				// セッション破棄
@@ -69,7 +59,6 @@ public class GeneralDashboard extends HttpServlet{
 		} else {
 			response.sendRedirect(request.getContextPath() + "/LogIn");
 		}
-
 	}
 
 }

@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**----------------------------------------------------------------------*
- *■■■AccountListDaoクラス■■■
+ *■■■ContactUsListDaoクラス■■■
  *概要：DAO
  *----------------------------------------------------------------------**/
 
 
-public class AccountListDao {
+public class ContactUsListDao {
 
 	//-------------------------------------------
 	//データベースへの接続情報
@@ -37,13 +37,13 @@ public class AccountListDao {
 	//----------------------------------------------------------------
 
 	/**----------------------------------------------------------------------*
-	 *■selectAccountListメソッド
-	 *概要  ：アカウント一覧を抽出する
+	 *■selectContactUsListメソッド
+	 *概要  ：お問い合わせ一覧を抽出する
 	 *引数  ：なし
-	 *戻り値：アカウント一覧（List<AccountListDto>型）
+	 *戻り値：お問い合わせ一覧（List<ContactUsListDto>型）
 	 *----------------------------------------------------------------------**/
 
-	public List<AccountListDto> selectAccountList(){
+	public List<ContactUsListDto> selectContactUsList(){
 
 		//-------------------------------------------
 		//JDBCドライバのロード
@@ -65,7 +65,7 @@ public class AccountListDao {
 		ResultSet         rs  = null ;   // ResultSet（SQL抽出結果）格納用変数
 
 		//抽出データ（AccountListDto型）格納用変数
-		List<AccountListDto> list = new ArrayList<>();
+		List<ContactUsListDto> list = new ArrayList<>();
 
 		try {
 
@@ -80,19 +80,22 @@ public class AccountListDao {
 
 			//発行するSQL文の生成（SELECT）
 			StringBuffer buf = new StringBuffer();
-			buf.append(" SELECT             ");
-			buf.append("   	user_id,        ");
-			buf.append("   	user_name,      ");
-			buf.append("   	user_name_kana, ");
-			buf.append("   	role ,          ");
-			buf.append("   	email,          ");
-			buf.append("   	status          ");
-			buf.append(" FROM               ");
-			buf.append(" 	users           ");
-			buf.append(" WHERE              ");
-			buf.append("  	is_deleted = 0  ");
-			buf.append(" ORDER BY           ");
-			buf.append("  	user_id asc     ");
+			buf.append(" SELECT                              ");
+			buf.append("   	cu.contact_us_id,                ");
+			buf.append("   	cc.category_name,                ");
+			buf.append("   	cu.body,                         ");
+			buf.append("   	cu.email,                        ");
+			buf.append("   	cu.status,                       ");
+			buf.append("   	cu.created_at,                   ");
+			buf.append("   	cu.updated_at                    ");
+			buf.append(" FROM                                ");
+			buf.append(" 	contact_us cu                    ");
+			buf.append(" INNER JOIN                          ");
+			buf.append(" 	contact_categories cc            ");
+			buf.append(" ON                                  ");
+			buf.append("  	cu.category_id = cc.category_id  ");
+			buf.append(" ORDER BY                            ");
+			buf.append("  	cu.created_at asc                ");
 
 
 			//PreparedStatement（SQL発行用オブジェクト）を生成＆発行するSQLをセット
@@ -105,14 +108,15 @@ public class AccountListDao {
 			//ResultSetオブジェクトからユーザーデータを抽出
 			//--------------------------------------------------------------------------------
 			while (rs.next()) {
-				AccountListDto dto = new AccountListDto();
+				ContactUsListDto dto = new ContactUsListDto();
 				//ResultSetから1行分のレコード情報をDTOへ登録
-				dto.setUserId(   rs.getInt("user_id")   );					//ユーザーID
-				dto.setUserName(   rs.getString("user_name")   );			//ユーザー名
-				dto.setUserNameKana(   rs.getString("user_name_kana")   );  //カナ.
-				dto.setRole(   rs.getInt("role")   );  						//権限
-				dto.setEmail(  rs.getString("email")  );   					//メールアドレス
-				dto.setStatus(  rs.getInt("status")  );   					//ステータス
+				dto.setContactUsId(   rs.getInt("contact_us_id")   );				//お問い合わせID
+				dto.setCategoryName(   rs.getString("category_name")   );			//カテゴリー名
+				dto.setBody(   rs.getString("body")   );  							//本文
+				dto.setEmail(   rs.getString("email")   );  						//メールアドレス
+				dto.setStatus(   rs.getInt("status")   );  							//ステータス 1:未対応 2:対応中 3:対応済み
+				dto.setCreatedAt(  rs.getDate("created_at").toLocalDate()   );   	//作成日時
+				dto.setUpdatedAt(  rs.getDate("updated_at").toLocalDate()   );   	//最終更新日時
 
 				//listに追加
 				list.add(dto);
@@ -159,13 +163,13 @@ public class AccountListDao {
 	}
 
 	/**----------------------------------------------------------------------*
-	 *■editAccountメソッド
-	 *概要  ：編集対象アカウントを抽出する
+	 *■editContactUsメソッド
+	 *概要  ：編集対象のお問い合わせを抽出する
 	 *引数  ：userId
-	 *戻り値：アカウント情報（AccountAddDto型）
+	 *戻り値：お問い合わせ情報（ContactUsListDto型）
 	 *----------------------------------------------------------------------**/
 
-	public AccountCRUDDto editAccount(String uid){
+	public ContactUsListDto editContactUs(int cuid){
 
 		//-------------------------------------------
 		//JDBCドライバのロード
@@ -186,8 +190,8 @@ public class AccountListDao {
 		PreparedStatement ps  = null ;   // PreparedStatement（SQL発行用オブジェクト）格納用変数
 		ResultSet         rs  = null ;   // ResultSet（SQL抽出結果）格納用変数
 
-		//抽出データ（AccountAddDto型）格納用変数
-		AccountCRUDDto dto = new AccountCRUDDto();
+		//抽出データ（ContactUsListDto型）格納用変数
+		ContactUsListDto dto = new ContactUsListDto();
 
 		try {
 
@@ -202,33 +206,29 @@ public class AccountListDao {
 
 			//発行するSQL文の生成（SELECT）
 			StringBuffer buf = new StringBuffer();
-			buf.append(" SELECT                    ");
-			buf.append("   	u.user_id,             ");
-			buf.append("   	u.user_name,           ");
-			buf.append("   	u.user_name_kana,      ");
-			buf.append("   	u.role ,               ");
-			buf.append("   	u.email,               ");
-			buf.append("   	u.status,              ");
-			buf.append("   	p.gender,              ");
-			buf.append("    p.birthday,            ");
-			buf.append("    p.introduction,        ");
-			buf.append("    p.profile_image_path   ");
-			buf.append(" FROM                      ");
-			buf.append(" 	users u                ");
-			buf.append(" LEFT JOIN	               ");
-			buf.append("    user_profiles p        ");
-			buf.append(" ON u.user_id = p.user_id  ");
-			buf.append(" WHERE                     ");
-			buf.append("  	u.is_deleted = 0       ");
-			buf.append("  	AND                    ");
-			buf.append("  	u.user_id = ?          ");
+			buf.append(" SELECT                              ");
+			buf.append("   	cu.contact_us_id,                ");
+			buf.append("   	cc.category_name,                ");
+			buf.append("   	cu.body,                         ");
+			buf.append("   	cu.email,                        ");
+			buf.append("   	cu.status,                       ");
+			buf.append("   	cu.created_at,                   ");
+			buf.append("   	cu.updated_at                    ");
+			buf.append(" FROM                                ");
+			buf.append(" 	contact_us cu                    ");
+			buf.append(" INNER JOIN                          ");
+			buf.append(" 	contact_categories cc            ");
+			buf.append(" ON                                  ");
+			buf.append("  	cu.category_id = cc.category_id  ");
+			buf.append(" WHERE                               ");
+			buf.append("  	cu.contact_us_id = ?             ");
 
 
 			//PreparedStatement（SQL発行用オブジェクト）を生成＆発行するSQLをセット
 			ps = con.prepareStatement(buf.toString());
 
 			//パラメータをセット
-			ps.setString( 1, uid  );
+			ps.setInt( 1, cuid  );
 
 			//SQL文の送信＆戻り値としてResultSet（SQL抽出結果）を取得
 			rs = ps.executeQuery();
@@ -238,16 +238,13 @@ public class AccountListDao {
 			//--------------------------------------------------------------------------------
 			if (rs.next()) {
 				//ResultSetから1行分のレコード情報をDTOへ登録
-				dto.setUserId(   rs.getString("user_id")   );					//ユーザーID
-				dto.setName(   rs.getString("user_name")   );					//ユーザー名
-				dto.setKana(   rs.getString("user_name_kana")   );  			//カナ.
-				dto.setRole(   rs.getString("role")   );  						//権限.
-				dto.setEmail(  rs.getString("email")  );   						//メールアドレス
-				dto.setStatus(  rs.getString("status")  );   					//ステータス
-				dto.setGender(  rs.getString("gender")  );   					//性別
-				dto.setBirthday(  rs.getDate("birthday").toLocalDate()  );		//生年月日
-				dto.setIntroduction(  rs.getString("introduction")  );			//自己紹介
-				dto.setProfileImagePath(  rs.getString("profileImagePath")  );	//プロフィール画像
+				dto.setContactUsId(   rs.getInt("contact_us_id")   );			//ユーザーID
+				dto.setCategoryName(   rs.getString("category_name")   );		//ユーザー名
+				dto.setBody(   rs.getString("body")   );  						//カナ.
+				dto.setEmail(   rs.getString("email")   );  					//権限.
+				dto.setStatus(  rs.getInt("status")  );   						//メールアドレス
+				dto.setCreatedAt(  rs.getDate("created_at").toLocalDate()  );   //ステータス
+				dto.setUpdatedAt(  rs.getDate("updated_at").toLocalDate()  );	//性別
 			}
 
 		} catch (Exception e){
@@ -291,13 +288,13 @@ public class AccountListDao {
 	}
 
 	/**----------------------------------------------------------------------*
-	 *■selectDeleteAccountListメソッド
-	 *概要  ：アカウント一覧を抽出する
-	 *引数  ：なし
-	 *戻り値：アカウント一覧（List<AccountListDto>型）
+	 *■updateContactUsメソッド
+	 *概要  ：編集対象のお問い合わせを更新する
+	 *引数  ：userId
+	 *戻り値：boolean型 (true:更新 false:失敗)
 	 *----------------------------------------------------------------------**/
 
-	public List<AccountListDto> selectDeleteAccountList(){
+	public boolean updateContactUs(int cuid, String st){
 
 		//-------------------------------------------
 		//JDBCドライバのロード
@@ -316,10 +313,9 @@ public class AccountListDao {
 		//※finallyブロックでも扱うためtryブロック内で宣言してはいけないことに注意
 		Connection        con = null ;   // Connection（DB接続情報）格納用変数
 		PreparedStatement ps  = null ;   // PreparedStatement（SQL発行用オブジェクト）格納用変数
-		ResultSet         rs  = null ;   // ResultSet（SQL抽出結果）格納用変数
 
-		//抽出データ（AccountListDto型）格納用変数
-		List<AccountListDto> list = new ArrayList<>();
+		//抽出データ（boolean型）格納用変数
+		boolean executeUpdate = true;
 
 		try {
 
@@ -334,61 +330,34 @@ public class AccountListDao {
 
 			//発行するSQL文の生成（SELECT）
 			StringBuffer buf = new StringBuffer();
-			buf.append(" SELECT             ");
-			buf.append("   	user_id,        ");
-			buf.append("   	user_name,      ");
-			buf.append("   	user_name_kana, ");
-			buf.append("   	role ,          ");
-			buf.append("   	email,          ");
-			buf.append("   	status          ");
-			buf.append(" FROM               ");
-			buf.append(" 	users           ");
-			buf.append(" WHERE              ");
-			buf.append("  	is_deleted = 1  ");
-			buf.append(" ORDER BY           ");
-			buf.append("  	user_id asc     ");
+			buf.append(" UPDATE                     ");
+			buf.append(" 	contact_us              ");
+			buf.append(" SET                        ");
+			buf.append("   	status = ?              ");
+			buf.append(" WHERE                      ");
+			buf.append("  	contact_us_id = ?       ");
 
 
 			//PreparedStatement（SQL発行用オブジェクト）を生成＆発行するSQLをセット
 			ps = con.prepareStatement(buf.toString());
 
+			//パラメータをセット
+			ps.setString( 1, st );
+			ps.setInt( 2, cuid  );
+
 			//SQL文の送信＆戻り値としてResultSet（SQL抽出結果）を取得
-			rs = ps.executeQuery();
-
-			//--------------------------------------------------------------------------------
-			//ResultSetオブジェクトからユーザーデータを抽出
-			//--------------------------------------------------------------------------------
-			while (rs.next()) {
-				AccountListDto dto = new AccountListDto();
-				//ResultSetから1行分のレコード情報をDTOへ登録
-				dto.setUserId(   rs.getInt("user_id")   );					//ユーザーID
-				dto.setUserName(   rs.getString("user_name")   );			//ユーザー名
-				dto.setUserNameKana(   rs.getString("user_name_kana")   );  //カナ.
-				dto.setRole(   rs.getInt("role")   );  						//権限
-				dto.setEmail(  rs.getString("email")  );   					//メールアドレス
-				dto.setStatus(  rs.getInt("status")  );   					//ステータス
-
-				//listに追加
-				list.add(dto);
-			}
+			ps.executeUpdate();
 
 		} catch (Exception e){
 
 			e.printStackTrace();
 
+			executeUpdate = false;
+
 		} finally {
 			//-------------------------------------------
 			//接続の解除
 			//-------------------------------------------
-
-			//ResultSetオブジェクトの接続解除
-			if (rs != null) {    //接続が確認できている場合のみ実施
-				try {
-					rs.close();  //接続の解除
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 
 			//PreparedStatementオブジェクトの接続解除
 			if (ps != null) {    //接続が確認できている場合のみ実施
@@ -409,9 +378,7 @@ public class AccountListDao {
 			}
 
 		}
-		return list;
+		return executeUpdate;
 	}
-
-
 
 }

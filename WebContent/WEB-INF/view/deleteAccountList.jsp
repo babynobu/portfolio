@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<%--概要：アカウント一覧画面  --%>
+<%--概要：管理者アカウント一覧画面  --%>
 
 <html>
 <head>
@@ -16,10 +16,8 @@
 			<th>ユーザー名 カナ</th>
 			<th>権限</th>
 			<th>メールアドレス</th>
-			<th>ステータス</th>
-			<th>ステータス切り替え</th>
-			<th>編集</th>
-			<th>削除</th>
+			<th>復元</th>
+			<th>完全削除</th>
 		</tr>
 
 		<c:forEach var="r" items="${ACCOUNT_LIST}">
@@ -29,22 +27,17 @@
 				<td>${r.userNameKana}</td>
 				<td class="role">${r.roleLabel}</td>
 				<td>${r.email}</td>
-				<td class="status">${r.statusLabel}</td>
-				<!-- ステータス切り替え -->
+			<!-- 	<td class="status">${r.statusLabel}</td>
 				<td>
 					<button onclick="toggleStatus(${r.userId}, this)">切替</button>
-				</td>
-				<!-- 編集 -->
+				</td> -->
+				<!-- 復元 -->
 				<td>
-					<form action="<%= request.getContextPath() %>/AccountEdit" >
-						<input type="hidden" name="userId" value="${r.userId}">
-						<input type="hidden" name="role" value="${r.role}">
-						<input type="submit" value="編集">
-					</form>
+					<button onclick="restoreAccount(${r.userId}, this)">復元</button>
 				</td>
-				<!-- 削除（論理削除） -->
+				<!-- 削除（物理削除） -->
 				<td>
-					<button onclick="deleteAccount(${r.userId}, this)">削除</button>
+					<button onclick="physicsDeleteAccount(${r.userId}, this)">削除</button>
 				</td>
 			</tr>
 		</c:forEach>
@@ -53,36 +46,38 @@
 	<form action="<%= request.getContextPath() %>/ManagerDashboard">
 		<button type="submit">戻る</button>
 	</form>
+
+
 	<script>
 
-	function toggleStatus(userId, btn) {
+	function restoreAccount(userId, btn) {
 		fetch('<%= request.getContextPath() %>/AccountAction', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
-			body: 'action=status&userId=' + userId
+			body: 'action=restore&userId=' + userId
 		})
 		.then(res => res.json())
 		.then(data => {
 			if (data.result === 'ok') {
-				// ステータス表示を書き換え
-				btn.closest('tr').querySelector('.status').textContent = data.newStatus;
+				// 行を削除
+				btn.closest('tr').remove();
 			} else {
-				alert('失敗しました');
+				alert('復元に失敗しました');
 			}
 		});
 	}
 
-	function deleteAccount(userId, btn) {
-		if (!confirm('本当に削除しますか？')) return;
+	function physicsDeleteAccount(userId, btn) {
+		if (!confirm('削除は取り消せません。本当に削除しますか？')) return;
 
 		fetch('<%= request.getContextPath() %>/AccountAction', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
-			body: 'action=delete&userId=' + userId
+			body: 'action=physicsDelete&userId=' + userId
 		})
 		.then(res => res.json())
 		.then(data => {

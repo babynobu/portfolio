@@ -47,7 +47,15 @@
 	<br>
 	<a href="<%= request.getContextPath() %>/AccountList">アカウント一覧へ</a>
 	<br>
+	<br>
+	<a href="<%= request.getContextPath() %>/DeleteAccountList">削除アカウント一覧へ</a>
+	<br>
+	<br>
 	<a href="<%= request.getContextPath() %>/AccountAdd">アカウント追加</a>
+	<br>
+	<br>
+	<a href="<%= request.getContextPath() %>/ContactUs">お問い合わせ一覧</a>
+	<br>
 	<br>
 	<form action="<%= request.getContextPath() %>/LogOut" method="post">
 		<button type="submit">ログアウト</button>

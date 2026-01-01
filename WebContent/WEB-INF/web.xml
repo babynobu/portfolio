@@ -101,5 +101,33 @@
 		<url-pattern>/ExecuteAccountEdit</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>DeleteAccountList</servlet-name>
+		<servlet-class>controller.DeleteAccountList</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteAccountList</servlet-name>
+		<url-pattern>/DeleteAccountList</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ContactUs</servlet-name>
+		<servlet-class>controller.ContactUs</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ContactUs</servlet-name>
+		<url-pattern>/ContactUs</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ContactUsDetail</servlet-name>
+		<servlet-class>controller.ContactUsDetail</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ContactUsDetail</servlet-name>
+		<url-pattern>/ContactUsDetail</url-pattern>
+	</servlet-mapping>
+
+
 
 </web-app>

@@ -54,6 +54,23 @@ public class AccountActionDao {
     }
 
     /**
+     * アカウント復元
+     */
+    public void restore(int userId) throws Exception {
+
+    	try (Connection con = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
+
+    		String sql =
+    			"UPDATE users SET is_deleted = 0 WHERE user_id = ? AND is_deleted= 1";
+
+    		try (PreparedStatement ps = con.prepareStatement(sql)) {
+    			ps.setInt(1, userId);
+    			ps.executeUpdate();
+    		}
+    	}
+    }
+
+    /**
      * 論理削除
      */
     public void logicalDelete(int userId) throws Exception {
@@ -63,6 +80,22 @@ public class AccountActionDao {
             String sql =
                 "UPDATE users SET is_deleted = 1 WHERE user_id = ? AND is_deleted = 0";
 
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, userId);
+                ps.executeUpdate();
+            }
+        }
+    }
+
+    /**
+     * 物理削除
+     */
+    public void physicsDelete(int userId) throws Exception {
+
+        try (Connection con = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
+
+            String sql =
+                "DELETE u, p FROM users u LEFT JOIN user_profiles p ON u.user_id = p.user_id WHERE u.user_id = ? ";
             try (PreparedStatement ps = con.prepareStatement(sql)) {
                 ps.setInt(1, userId);
                 ps.executeUpdate();

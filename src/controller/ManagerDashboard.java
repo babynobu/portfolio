@@ -47,7 +47,7 @@ public class ManagerDashboard extends HttpServlet{
 
 				//ダッシュボード画面にフォワード
 				RequestDispatcher dispatch =
-						request.getRequestDispatcher("/WEB-INF/view/ManagerDashboard.jsp");
+						request.getRequestDispatcher("/WEB-INF/view/managerDashboard.jsp");
 				dispatch.forward(request, response);
 				//一般
 			}else if ( userInfoOnSession.getRole() == 0 ) {

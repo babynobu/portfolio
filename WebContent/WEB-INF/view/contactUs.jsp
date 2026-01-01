@@ -1,50 +1,45 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<%--概要：アカウント一覧画面  --%>
+
+<%--概要：お問い合わせ一覧画面  --%>
 
 <html>
 <head>
-<title>アカウント一覧</title>
+<title>お問い合わせ一覧</title>
 </head>
 <body>
-	<h2>アカウント一覧</h2>
+	<h2>お問い合わせ一覧</h2>
 	<table border="1">
 		<tr>
-			<th>ユーザーID</th>
-			<th>ユーザー名</th>
-			<th>ユーザー名 カナ</th>
-			<th>権限</th>
+			<th>お問い合わせID</th>
+			<th>カテゴリー</th>
+			<th>本文</th>
 			<th>メールアドレス</th>
-			<th>ステータス</th>
-			<th>ステータス切り替え</th>
-			<th>編集</th>
-			<th>削除</th>
+			<th class="status">ステータス</th>
+			<th>作成日時</th>
+			<th>最終更新日時</th>
+			<th>詳細</th>
 		</tr>
 
-		<c:forEach var="r" items="${ACCOUNT_LIST}">
+		<c:forEach var="r" items="${CONTACT_US_LIST}">
 			<tr>
-				<td>${r.userId}</td>
-				<td>${r.userName}</td>
-				<td>${r.userNameKana}</td>
-				<td class="role">${r.roleLabel}</td>
+				<td>${r.contactUsId}</td>
+				<td>${r.categoryName}</td>
+				<td>
+					${fn:substring(r.body,0,10)}
+					<c:if test="${fn:length(r.body) > 10}">...</c:if>
+				</td>
 				<td>${r.email}</td>
 				<td class="status">${r.statusLabel}</td>
-				<!-- ステータス切り替え -->
+				<td>${r.createdAt}</td>
+				<td>${r.updatedAt}</td>
 				<td>
-					<button onclick="toggleStatus(${r.userId}, this)">切替</button>
-				</td>
-				<!-- 編集 -->
-				<td>
-					<form action="<%= request.getContextPath() %>/AccountEdit" >
-						<input type="hidden" name="userId" value="${r.userId}">
-						<input type="hidden" name="role" value="${r.role}">
-						<input type="submit" value="編集">
+					<form action="<%= request.getContextPath() %>/ContactUsDetail" >
+						<input type="hidden" name="contactUsId" value="${r.contactUsId}">
+						<input type="submit" value="詳細">
 					</form>
-				</td>
-				<!-- 削除（論理削除） -->
-				<td>
-					<button onclick="deleteAccount(${r.userId}, this)">削除</button>
 				</td>
 			</tr>
 		</c:forEach>
@@ -53,8 +48,10 @@
 	<form action="<%= request.getContextPath() %>/ManagerDashboard">
 		<button type="submit">戻る</button>
 	</form>
-	<script>
 
+
+	<%--
+	<script>
 	function toggleStatus(userId, btn) {
 		fetch('<%= request.getContextPath() %>/AccountAction', {
 			method: 'POST',
@@ -95,6 +92,7 @@
 		});
 	}
 	</script>
+	--%>
 
 </body>
 </html>
