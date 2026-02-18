@@ -5,23 +5,71 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>アカウント追加</title>
 
 <style>
-.role-area {
-    display: none;
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-top: 15px;
+/* 画面外枠：PCで広がりすぎ防止 + スマホ左右余白 */
+.container{
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 16px;
 }
-.error {
-    color: red;
-    font-size: 0.9em;
+
+/* 入力欄の並び：PC 2列 / スマホ 1列 */
+.form-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* 1項目（ラベル＋入力）のセット */
+.field label.field-label{
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* 入力系：スマホで崩れないよう幅100% */
+.field input[type="text"],
+.field input[type="password"],
+.field input[type="email"],
+.field input[type="number"],
+.field input[type="file"],
+.field textarea{
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.field textarea{
+  min-height: 90px;
+}
+
+.role-area{
+  display: none;
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+.error{
+  color: red;
+  font-size: 0.9em;
+  margin-top: 6px;
+}
+
+/* スマホだけ1列 */
+@media (max-width: 768px){
+  .form-grid{
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
 
 <body>
+<div class="container">
 
 <h2>アカウント追加</h2>
 
@@ -29,151 +77,168 @@
       method="post"
       enctype="multipart/form-data">
 
-    <!-- ===== 権限選択 ===== -->
+  <!-- ===== 権限選択 ===== -->
+  <div class="field">
+    <label class="field-label">権限</label>
+
     <label>
-        <input type="radio" name="role" value="admin"
-            ${param.role == 'admin' ? 'checked' : ''}>
-        管理者
+      <input type="radio" name="role" value="admin"
+        ${param.role == 'admin' ? 'checked' : ''}>
+      管理者
     </label>
+
     <label>
-        <input type="radio" name="role" value="general"
-            ${param.role == 'general' ? 'checked' : ''}>
-        一般
+      <input type="radio" name="role" value="general"
+        ${param.role == 'general' ? 'checked' : ''}>
+      一般
     </label>
 
     <c:if test="${not empty errors.role}">
-        <div class="error">${errors.role}</div>
+      <div class="error">${errors.role}</div>
     </c:if>
+  </div>
 
-    <!-- ===== 共通項目 ===== -->
-    <h3>共通項目</h3>
+  <!-- ===== 共通項目 ===== -->
+  <h3>共通項目</h3>
 
-    <p>
-        ログインID<br>
-        <input type="text" name="loginId" value="${param.loginId}">
-    </p>
-    <c:if test="${not empty errors.loginId}">
+  <div class="form-grid">
+    <div class="field">
+      <label class="field-label">ログインID</label>
+      <input type="text" name="loginId" value="${param.loginId}">
+      <c:if test="${not empty errors.loginId}">
         <div class="error">${errors.loginId}</div>
-    </c:if>
+      </c:if>
+    </div>
 
-    <p>
-        パスワード<br>
-        <input type="password" name="password">
-    </p>
-    <c:if test="${not empty errors.password}">
+    <div class="field">
+      <label class="field-label">パスワード</label>
+      <input type="password" name="password" value="${param.password}">
+      <c:if test="${not empty errors.password}">
         <div class="error">${errors.password}</div>
-    </c:if>
+      </c:if>
+    </div>
 
-    <p>
-        名前<br>
-        <input type="text" name="name" value="${param.name}">
-    </p>
-    <c:if test="${not empty errors.name}">
+    <div class="field">
+      <label class="field-label">名前</label>
+      <input type="text" name="name" value="${param.name}">
+      <c:if test="${not empty errors.name}">
         <div class="error">${errors.name}</div>
-    </c:if>
+      </c:if>
+    </div>
 
-    <p>
-        ふりがな<br>
-        <input type="text" name="kana" value="${param.kana}">
-    </p>
-    <c:if test="${not empty errors.kana}">
-        <div class="error">${errors.kana}</div>
-    </c:if>
-
-    <p>
-        メールアドレス<br>
-        <input type="email" name="email" value="${param.email}">
-    </p>
-    <c:if test="${not empty errors.email}">
+    <div class="field">
+      <label class="field-label">メールアドレス</label>
+      <input type="email" name="email" value="${param.email}">
+      <c:if test="${not empty errors.email}">
         <div class="error">${errors.email}</div>
-    </c:if>
-
-    <p>
-        アカウントステータス<br>
-        <label>
-            <input type="radio" name="status" value="1"
-                ${param.status == '1' ? 'checked' : ''}>
-            有効
-        </label>
-        <label>
-            <input type="radio" name="status" value="0"
-                ${param.status == '0' ? 'checked' : ''}>
-            無効
-        </label>
-    </p>
-    <c:if test="${not empty errors.gender}">
-        <div class="error">${errors.gender}</div>
-    </c:if>
-
-
-    <!-- ===== 管理者用エリア ===== -->
-    <div id="adminArea" class="role-area">
-        <h3>管理者項目</h3>
-        <p>※ 追加項目はありません</p>
+      </c:if>
     </div>
 
-    <!-- ===== 一般用エリア ===== -->
-    <div id="generalArea" class="role-area">
-        <h3>一般項目</h3>
+    <div class="field">
+      <label class="field-label">アカウントステータス</label>
+      <label>
+        <input type="radio" name="status" value="1"
+          ${param.status == '1' ? 'checked' : ''}>
+        有効
+      </label>
+      <label>
+        <input type="radio" name="status" value="0"
+          ${param.status == '0' ? 'checked' : ''}>
+        無効
+      </label>
 
-        <!-- 性別 -->
-        <p>
-            性別<br>
-            <label>
-                <input type="radio" name="gender" value="1"
-                    ${param.gender == '1' ? 'checked' : ''}>
-                男性
-            </label>
-            <label>
-                <input type="radio" name="gender" value="2"
-                    ${param.gender == '2' ? 'checked' : ''}>
-                女性
-            </label>
-            <label>
-                <input type="radio" name="gender" value="3"
-                    ${param.gender == '3' ? 'checked' : ''}>
-                その他
-            </label>
-        </p>
+      <c:if test="${not empty errors.status}">
+        <div class="error">${errors.status}</div>
+      </c:if>
+    </div>
+  </div>
+
+  <!-- ===== 管理者用エリア ===== -->
+  <div id="adminArea" class="role-area">
+    <h3>管理者項目</h3>
+    <p>※ 追加項目はありません</p>
+  </div>
+
+  <!-- ===== 一般用エリア ===== -->
+  <div id="generalArea" class="role-area">
+    <h3>一般項目</h3>
+
+    <div class="form-grid">
+
+      <!-- ふりがな：一般のみ -->
+      <div class="field">
+        <label class="field-label">ふりがな</label>
+        <input type="text" name="kana" value="${param.kana}">
+        <c:if test="${not empty errors.kana}">
+          <div class="error">${errors.kana}</div>
+        </c:if>
+      </div>
+
+      <div class="field">
+        <label class="field-label">性別</label>
+
+        <label>
+          <input type="radio" name="gender" value="1"
+            ${param.gender == '1' ? 'checked' : ''}>
+          男性
+        </label>
+        <label>
+          <input type="radio" name="gender" value="2"
+            ${param.gender == '2' ? 'checked' : ''}>
+          女性
+        </label>
+        <label>
+          <input type="radio" name="gender" value="3"
+            ${param.gender == '3' ? 'checked' : ''}>
+          その他
+        </label>
+
         <c:if test="${not empty errors.gender}">
-            <div class="error">${errors.gender}</div>
+          <div class="error">${errors.gender}</div>
         </c:if>
+      </div>
 
-        <!-- 生年月日 -->
-        <p>
-            生年月日<br>
-            <input type="date" name="birthday">
-        </p>
-        <c:if test="${not empty errors.birthday}">
-            <div class="error">${errors.birthday}</div>
+      <!-- ★ 生年月日 → 年齢 -->
+      <div class="field">
+        <label class="field-label">年齢</label>
+        <input type="number" name="age" min="0" max="999" value="${param.age}">
+        <c:if test="${not empty errors.age}">
+          <div class="error">${errors.age}</div>
         </c:if>
+      </div>
 
-		<!-- 自己紹介 -->
-        <p>
-            自己紹介<br>
-            <textarea name="introduction">${param.introduction}</textarea>
-        </p>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label class="field-label">自己紹介</label>
+        <textarea name="introduction">${param.introduction}</textarea>
         <c:if test="${not empty errors.introduction}">
-            <div class="error">${errors.introduction}</div>
+          <div class="error">${errors.introduction}</div>
         </c:if>
+      </div>
 
-        <!-- プロフィール画像 -->
-        <p>
-        	プロフィール画像<br>
-        	<input type = "file" name ="profileImage">
-        </p>
-        <c:if test="not empty errors.profileImage">
-        	<div class="error">${error.profileImage}</div>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label class="field-label">プロフィール画像</label>
+        <input type="file" name="profileImage">
+
+        <c:if test="${not empty errors.profileImage}">
+          <div class="error">${errors.profileImage}</div>
         </c:if>
+      </div>
     </div>
+  </div>
 
-    <p>
-        <input type="submit" value="登録">
-    </p>
+  <p>
+    <input type="submit" value="登録">
+  </p>
 </form>
 
+<c:if test="${not empty errorMessage}">
+  <div style="color:red;">
+    ${errorMessage}
+  </div>
+</c:if>
+
 <form action="<%=request.getContextPath()%>/ManagerDashboard">
-    <button type="submit">戻る</button>
+  <button type="submit">戻る</button>
 </form>
 
 <script>
@@ -181,27 +246,37 @@ const roleRadios  = document.querySelectorAll('input[name="role"]');
 const adminArea   = document.getElementById('adminArea');
 const generalArea = document.getElementById('generalArea');
 
-function switchRole(role) {
-    adminArea.style.display   = role === 'admin'   ? 'block' : 'none';
-    generalArea.style.display = role === 'general' ? 'block' : 'none';
+function setDisabledInArea(areaEl, disabled) {
+  const targets = areaEl.querySelectorAll('input, textarea, select');
+  targets.forEach(el => {
+    el.disabled = disabled;
+  });
 }
 
-// 初期表示
+function switchRole(role) {
+  const isAdmin = role === 'admin';
+
+  adminArea.style.display   = isAdmin ? 'block' : 'none';
+  generalArea.style.display = isAdmin ? 'none' : 'block';
+
+  // 管理者のときは一般項目を送信しない
+  setDisabledInArea(generalArea, isAdmin);
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-    const checked = document.querySelector('input[name="role"]:checked');
-    if (checked) {
-        switchRole(checked.value);
-    }
+  const checked = document.querySelector('input[name="role"]:checked');
+  if (checked) {
+    switchRole(checked.value);
+  }
 });
 
-// 切り替え
 roleRadios.forEach(radio => {
-    radio.addEventListener('change', () => {
-        switchRole(radio.value);
-    });
+  radio.addEventListener('change', () => {
+    switchRole(radio.value);
+  });
 });
 </script>
 
-
+</div>
 </body>
 </html>

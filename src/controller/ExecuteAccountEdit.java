@@ -2,7 +2,6 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,8 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import model.AccountCRUDDto;
-import model.AccountEditBL;
+import model.AccountDao;
+import model.AccountDto;
+import model.AccountUpdateBL;
 import model.UserInfoDto;
 
 @MultipartConfig
@@ -30,7 +30,6 @@ public class ExecuteAccountEdit extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // セッションチェック
         HttpSession session = request.getSession(false);
         UserInfoDto loginUser =
                 (session != null) ? (UserInfoDto) session.getAttribute("LOGIN_INFO") : null;
@@ -40,13 +39,12 @@ public class ExecuteAccountEdit extends HttpServlet {
             return;
         }
 
-        // 管理者のみ許可
         if (loginUser.getRole() != 1) {
             response.sendRedirect(request.getContextPath() + "/GeneralDashboard");
             return;
         }
 
-        response.sendRedirect(request.getContextPath() + "/AccountAdd");
+        response.sendRedirect(request.getContextPath() + "/AccountList");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -57,37 +55,89 @@ public class ExecuteAccountEdit extends HttpServlet {
 
         Map<String, String> errors = new HashMap<>();
 
-        // ===== 共通パラメータ =====
-        String role     = request.getParameter("role");
-        String userId     = request.getParameter("userId");
-        String name     = request.getParameter("name");
-        String kana     = request.getParameter("kana");
-        String email    = request.getParameter("email");
-        String status    = request.getParameter("status");
+        // 1) パラメータ取得
+        String roleParam   = request.getParameter("role");    // "0" or "1"
+        String userIdParam = request.getParameter("userId");  // 数値
+        String loginId     = request.getParameter("loginId");
+        String password    = request.getParameter("password");
+        String name        = request.getParameter("name");
+        String email       = request.getParameter("email");
+        String statusParam = request.getParameter("status");  // "0" or "1"
 
-        // ===== general 用（後で使うので先に定義）=====
-        String gender = null;
+        // general 用
+        int gender = 0;
+        String kana = null;
+        Integer age = null;              // ★追加
         String introduction = null;
-        LocalDate parsedBirthday = null;
         String profileImagePath = null;
 
-        // ===== role チェック =====
-        if (role == null) {
-            errors.put("role", "権限が選択されていません。");
+        // 2) userId parse
+        int userId = -1;
+        if (userIdParam == null || userIdParam.isEmpty()) {
+            errors.put("userId", "ユーザーIDが取得できません。");
+        } else {
+            try {
+                userId = Integer.parseInt(userIdParam);
+                if (userId <= 0) {
+                    errors.put("userId", "ユーザーIDが不正です。");
+                }
+            } catch (Exception e) {
+                errors.put("userId", "ユーザーIDが不正です。");
+            }
         }
 
-        // ===== 共通バリデーション =====
+        // 3) role parse
+        int role = -1;
+        if (roleParam == null || roleParam.isEmpty()) {
+            errors.put("role", "権限が選択されていません。");
+        } else {
+            try {
+                role = Integer.parseInt(roleParam);
+                if (role != 0 && role != 1) {
+                    errors.put("role", "不正な権限が指定されました。");
+                }
+            } catch (Exception e) {
+                errors.put("role", "不正な権限が指定されました。");
+            }
+        }
+
+        // 4) status parse
+        int status = -1;
+        if (statusParam == null || statusParam.isEmpty()) {
+            errors.put("status", "ステータスが選択されていません。");
+        } else {
+            try {
+                status = Integer.parseInt(statusParam);
+                if (status != 0 && status != 1) {
+                    errors.put("status", "ステータスが不正です。");
+                }
+            } catch (Exception e) {
+                errors.put("status", "ステータスが不正です。");
+            }
+        }
+
+        // 5) 共通バリデーション
+        if (loginId == null || loginId.isEmpty()) {
+            errors.put("loginId", "ログインIDは必須です。");
+        } else if (loginId.length() > 255) {
+            errors.put("loginId", "ログインIDは255文字以内で入力してください。");
+        } else if (userId > 0) {
+            AccountDao dao = new AccountDao();
+            if (dao.existsLoginIdExceptSelf(loginId, userId)) {
+                errors.put("loginId", "このログインIDはすでに使用されています。");
+            }
+        }
+
+        if (password == null || password.isEmpty()) {
+            errors.put("password", "パスワードは必須です。");
+        } else if (!password.matches("^[a-zA-Z0-9_-]{8,32}$")) {
+            errors.put("password", "パスワードは8〜32文字の半角英数字と「_」「-」のみ使用できます。");
+        }
 
         if (name == null || name.isEmpty()) {
             errors.put("name", "名前は必須です。");
         } else if (name.length() > 255) {
             errors.put("name", "名前は255文字以内で入力してください。");
-        }
-
-        if (kana == null || kana.isEmpty()) {
-            errors.put("kana", "ふりがなは必須です。");
-        } else if (!kana.matches("^[ぁ-んー 　]+$")) {
-            errors.put("kana", "ふりがなはひらがなのみで入力してください。");
         }
 
         if (email == null || email.isEmpty()) {
@@ -97,120 +147,122 @@ public class ExecuteAccountEdit extends HttpServlet {
         } else if (!email.matches(".+@.+\\..+")) {
             errors.put("email", "メールアドレスの形式が正しくありません。");
         }
-        //-----------------------------------------------------------------------------------
-        if (!"1".equals(status) && !"0".equals(status)) {
-            errors.put("status", "ステータスが不正です。");
-        }
 
-        // ===== 一般ユーザー専用 =====
-        if ("0".equals(role)) {
+        // 6) 一般ユーザー専用（role==0）
+        if (role == 0) {
 
-            gender = request.getParameter("gender");
-            String birthdayStr = request.getParameter("birthday");
-            introduction = request.getParameter("introduction");
-
-            // 性別（1 / 2 / 3）
-            if (!"1".equals(gender) && !"2".equals(gender) && !"3".equals(gender)) {
-                errors.put("gender", "性別が不正です。");
+            kana = request.getParameter("kana");
+            if (kana == null || kana.isEmpty()) {
+                errors.put("kana", "ふりがなは必須です。");
+            } else if (!kana.matches("^[ぁ-んー 　]+$")) {
+                errors.put("kana", "ふりがなはひらがなのみで入力してください。");
             }
 
-            // 生年月日
-            if (birthdayStr == null || birthdayStr.isEmpty()) {
-                errors.put("birthday", "生年月日は必須です。");
+            String genderParam = request.getParameter("gender");
+            if (genderParam == null || genderParam.isEmpty()) {
+                errors.put("gender", "性別が選択されていません。");
             } else {
                 try {
-                    parsedBirthday = LocalDate.parse(birthdayStr);
-                    if (parsedBirthday.isAfter(LocalDate.now())) {
-                        errors.put("birthday", "生年月日は未来の日付にできません。");
+                    gender = Integer.parseInt(genderParam);
+                    if (gender != 1 && gender != 2 && gender != 3) {
+                        errors.put("gender", "性別が不正です。");
                     }
                 } catch (Exception e) {
-                    errors.put("birthday", "生年月日の形式が正しくありません。");
+                    errors.put("gender", "性別が不正です。");
                 }
             }
 
-            // 自己紹介
+            // ★ 年齢（固定）
+            String ageStr = request.getParameter("age");
+            if (ageStr == null || ageStr.isEmpty()) {
+                errors.put("age", "年齢は必須です。");
+            } else {
+                try {
+                    int a = Integer.parseInt(ageStr);
+                    if (a < 0 || a > 999) {
+                        errors.put("age", "年齢は0〜999の範囲で入力してください。");
+                    } else {
+                        age = a;
+                    }
+                } catch (Exception e) {
+                    errors.put("age", "年齢は数値で入力してください。");
+                }
+            }
+
+            introduction = request.getParameter("introduction");
             if (introduction != null && introduction.length() > 1500) {
                 errors.put("introduction", "自己紹介は1500文字以内で入力してください。");
             }
-
-        } else if (!"1".equals(role)) {
-            // 想定外（改ざん対策）
-            errors.put("role", "不正な権限が指定されました。");
         }
 
-        // ===== エラーがあれば戻す =====
+        // 7) エラーがあれば戻す
         if (!errors.isEmpty()) {
             forwardToForm(request, response, errors);
             return;
         }
 
-        // ===== ここまで来たら入力はOK =====
+        // 8) 画像（role==0のときだけ）
+        if (role == 0) {
+            Part imagePart = request.getPart("profileImage");
 
-        // ===== プロフィール画像の受け取り・保存 =====
+            if (imagePart != null && imagePart.getSize() > 0) {
 
-        Part imagePart = request.getPart("profileImage");   // input name="profileImage"
+                long MAX_FILE_SIZE = 2 * 1024 * 1024;
+                if (imagePart.getSize() > MAX_FILE_SIZE) {
+                    errors.put("profileImage", "プロフィール画像は2MB以内でアップロードしてください。");
+                    forwardToForm(request, response, errors);
+                    return;
+                }
 
-        if (imagePart != null && imagePart.getSize() > 0) {
+                String fileName = imagePart.getSubmittedFileName();
+                String uploadDir = getServletContext().getRealPath("/img/profile");
 
-            // ===== 2MB サイズチェック =====
-            long MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
 
-            if (imagePart.getSize() > MAX_FILE_SIZE) {
-                errors.put("profileImage", "プロフィール画像は2MB以内でアップロードしてください。");
-                forwardToForm(request, response, errors);
-                return;
+                String savePath = uploadDir + File.separator + fileName;
+                imagePart.write(savePath);
+
+                profileImagePath = "/img/profile/" + fileName;
             }
-
-            String fileName = imagePart.getSubmittedFileName();
-
-            // 保存先ディレクトリ
-            String uploadDir =
-                    getServletContext().getRealPath("/img/profile");
-
-            File dir = new File(uploadDir);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            // 実際の保存パス
-            String savePath = uploadDir + File.separator + fileName;
-            imagePart.write(savePath);
-
-            // DB に保存するパス
-            profileImagePath = "/img/profile/" + fileName;
         }
 
+        // 9) DTOへ
+        AccountDto dto = new AccountDto();
 
-        AccountCRUDDto dto = new AccountCRUDDto();
-
-        dto.setRole(role);
         dto.setUserId(userId);
+        dto.setRole(role);
+        dto.setLoginId(loginId);
+        dto.setPassword(password);
         dto.setName(name);
-        dto.setKana(kana);
         dto.setEmail(email);
         dto.setStatus(status);
 
-        if ("0".equals(role)) {
+        if (role == 0) {
+            dto.setKana(kana);
             dto.setGender(gender);
-            dto.setBirthday(parsedBirthday);
+            dto.setAge(age); // ★追加
             dto.setIntroduction(introduction);
-            //画像を受け取る
+
             if (profileImagePath != null) {
                 dto.setProfileImagePath(profileImagePath);
             }
         }
 
-        AccountEditBL logic = new AccountEditBL();
+        // 10) 更新処理
+        AccountUpdateBL logic = new AccountUpdateBL();
 
         try {
-            boolean result = logic.accountEdit(dto);
+            boolean result = logic.accountUpdate(dto);
 
             if (result) {
                 RequestDispatcher rd =
                         request.getRequestDispatcher("/WEB-INF/view/accountEditComplete.jsp");
                 rd.forward(request, response);
             } else {
-                request.setAttribute("errorMessage", "登録処理に失敗しました。");
+                request.setAttribute("errorMessage", "更新処理に失敗しました。");
                 RequestDispatcher rd =
                         request.getRequestDispatcher("/WEB-INF/view/accountEdit.jsp");
                 rd.forward(request, response);
@@ -232,6 +284,14 @@ public class ExecuteAccountEdit extends HttpServlet {
             throws ServletException, IOException {
 
         request.setAttribute("errors", errors);
+
+        String userIdParam = request.getParameter("userId");
+        if (userIdParam != null && !userIdParam.isEmpty()) {
+            AccountDao dao = new AccountDao();
+            AccountDto dto = dao.selectEditAccount(userIdParam);
+            request.setAttribute("account", dto);
+        }
+
         RequestDispatcher rd =
                 request.getRequestDispatcher("/WEB-INF/view/accountEdit.jsp");
         rd.forward(request, response);

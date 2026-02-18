@@ -14,12 +14,12 @@ public class AccountAddBL {
 	 * 戻り値：処理結果（true/false）
 	 -----------------------------------------------------*/
 
-	public boolean accountAdd(AccountCRUDDto dto){
+	public boolean accountAdd(AccountDto dto){
 
 		boolean result = true;
 
 		//DB接続
-		AccountCRUDDao dao = new AccountCRUDDao();
+		AccountDao dao = new AccountDao();
 		result = dao.insertAccount(dto);
 
 		return result;

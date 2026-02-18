@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.AccountListDto;
+import model.AccountDto;
 import model.DeleteAccountListBL;
 import model.UserInfoDto;
 
@@ -34,7 +34,7 @@ public class DeleteAccountList extends HttpServlet{
 				//アカウント一覧を取得
 				//インスタンス化
 				DeleteAccountListBL al = new DeleteAccountListBL();
-				List<AccountListDto> accountList = new ArrayList<>();
+				List<AccountDto> accountList = new ArrayList<>();
 				//メソッド起動
 				accountList = al.selectDeleteAccountList();
 				//リクエストにアカウント情報を格納

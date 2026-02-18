@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import model.StampInfoDto;
 import model.UserInfoDto;
-import model.monthlyGoodStampBL;
+import model.MonthlyGoodStampBL;
 import model.yearlyGoodStampBL;
 
 public class GeneralDashboard extends HttpServlet{
@@ -34,7 +34,7 @@ public class GeneralDashboard extends HttpServlet{
 
 				//いいね件数を取得
 				yearlyGoodStampBL yg = new yearlyGoodStampBL();
-				monthlyGoodStampBL mg = new monthlyGoodStampBL();
+				MonthlyGoodStampBL mg = new MonthlyGoodStampBL();
 
 				List<StampInfoDto> yearlyList = new ArrayList<>();
 				List<StampInfoDto> monthlyList = new ArrayList<>();

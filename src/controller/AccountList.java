@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.AccountDto;
 import model.AccountListBL;
-import model.AccountListDto;
 import model.UserInfoDto;
 
 public class AccountList extends HttpServlet{
@@ -31,14 +31,48 @@ public class AccountList extends HttpServlet{
 			//管理者
 			if ( userInfoOnSession.getRole() == 1 ) {
 
+				//ページ番号取得（デフォルト1）
+				int page = 1;
+				int limit = 5;
+
+				String pageParam = request.getParameter("page");
+				if (pageParam != null && !pageParam.isEmpty()) {
+				    try {
+				        page = Integer.parseInt(pageParam);
+				    } catch (NumberFormatException e) {
+				        page = 1; // 不正値なら1ページ目に戻す
+				    }
+				}
+
 				//アカウント一覧を取得
-				//インスタンス化
 				AccountListBL al = new AccountListBL();
-				List<AccountListDto> accountList = new ArrayList<>();
+
+				//インスタンス化
+				List<AccountDto> accountList = new ArrayList<>();
+
+				//全件数取得
+                int totalCount = al.countAccount();
+
+                //総ページ数
+                int totalPage = (int) Math.ceil((double) totalCount / limit);
+
+                //ページ補正（削除後0件ページ対策）
+                if (totalPage > 0 && page > totalPage) {
+                    page = totalPage;
+                }
+                if (page < 1) {
+                    page = 1;
+                }
+
+                int offset = (page - 1) * limit;
+
+                //ページ対応の一覧取得
 				//メソッド起動
-				accountList = al.selectAccountList();
+				accountList = al.selectAccountList(limit, offset);
 				//リクエストにアカウント情報を格納
 				request.setAttribute("ACCOUNT_LIST", accountList);
+				request.setAttribute("currentPage", page);
+				request.setAttribute("totalPage", totalPage);
 
 				//アカウント一覧画面にフォワード
 				RequestDispatcher dispatch =

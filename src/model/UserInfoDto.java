@@ -51,12 +51,4 @@ public class UserInfoDto {
 	public void setRole(int role) {
 		this.role = role;
 	}
-
-
-
-
-
-
-
-
 }

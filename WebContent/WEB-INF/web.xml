@@ -128,6 +128,175 @@
 		<url-pattern>/ContactUsDetail</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>CategoryList</servlet-name>
+		<servlet-class>controller.CategoryList</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CategoryList</servlet-name>
+		<url-pattern>/CategoryList</url-pattern>
+	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>CategoryAction</servlet-name>
+		<servlet-class>controller.CategoryAction</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CategoryAction</servlet-name>
+		<url-pattern>/CategoryAction</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>CategoryEdit</servlet-name>
+		<servlet-class>controller.CategoryEdit</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CategoryEdit</servlet-name>
+		<url-pattern>/CategoryEdit</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ExecuteCategoryEdit</servlet-name>
+		<servlet-class>controller.ExecuteCategoryEdit</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExecuteCategoryEdit</servlet-name>
+		<url-pattern>/ExecuteCategoryEdit</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>CategoryAdd</servlet-name>
+		<servlet-class>controller.CategoryAdd</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CategoryAdd</servlet-name>
+		<url-pattern>/CategoryAdd</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ExecuteCategoryAdd</servlet-name>
+		<servlet-class>controller.ExecuteCategoryAdd</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExecuteCategoryAdd</servlet-name>
+		<url-pattern>/ExecuteCategoryAdd</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ManagerSetting</servlet-name>
+		<servlet-class>controller.ManagerSetting</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ManagerSetting</servlet-name>
+		<url-pattern>/ManagerSetting</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ExecuteManagerSetting</servlet-name>
+		<servlet-class>controller.ExecuteManagerSetting</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExecuteManagerSetting</servlet-name>
+		<url-pattern>/ExecuteManagerSetting</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>GeneralSetting</servlet-name>
+		<servlet-class>controller.GeneralSetting</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GeneralSetting</servlet-name>
+		<url-pattern>/GeneralSetting</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ExecuteGeneralSetting</servlet-name>
+		<servlet-class>controller.ExecuteGeneralSetting</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExecuteGeneralSetting</servlet-name>
+		<url-pattern>/ExecuteGeneralSetting</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ProfileEdit</servlet-name>
+		<servlet-class>controller.ProfileEdit</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfileEdit</servlet-name>
+		<url-pattern>/ProfileEdit</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ExecuteProfileEdit</servlet-name>
+		<servlet-class>controller.ExecuteProfileEdit</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExecuteProfileEdit</servlet-name>
+		<url-pattern>/ExecuteProfileEdit</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PublicHome</servlet-name>
+		<servlet-class>controller.PublicHome</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PublicHome</servlet-name>
+		<url-pattern>/PublicHome</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PublicAccountList</servlet-name>
+		<servlet-class>controller.PublicAccountList</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PublicAccountList</servlet-name>
+		<url-pattern>/PublicAccountList</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PublicLike</servlet-name>
+		<servlet-class>controller.PublicLike</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PublicLike</servlet-name>
+		<url-pattern>/PublicLike</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PublicMonthlyRanking</servlet-name>
+		<servlet-class>controller.PublicMonthlyRanking</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PublicMonthlyRanking</servlet-name>
+		<url-pattern>/PublicMonthlyRanking</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PublicAccountDetail</servlet-name>
+		<servlet-class>controller.PublicAccountDetail</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PublicAccountDetail</servlet-name>
+		<url-pattern>/PublicAccountDetail</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PublicContactUs</servlet-name>
+		<servlet-class>controller.PublicContactUs</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PublicContactUs</servlet-name>
+		<url-pattern>/PublicContactUs</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ExecutePublicContactUs</servlet-name>
+		<servlet-class>controller.ExecutePublicContactUs</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExecutePublicContactUs</servlet-name>
+		<url-pattern>/ExecutePublicContactUs</url-pattern>
+	</servlet-mapping>
 
 </web-app>

@@ -89,6 +89,8 @@ public class UserInfoDao {
 			buf.append(" WHERE                ");
 			buf.append("   LOGIN_ID  = ? AND  ");  //第1パラメータ
 			buf.append("   PASSWORD = ?       ");  //第2パラメータ
+			buf.append("   AND STATUS = 1     ");  //1=有効、0=無効
+			buf.append("   AND IS_DELETED = 0 ");
 
 			//PreparedStatement（SQL発行用オブジェクト）を生成＆発行するSQLをセット
 			ps = con.prepareStatement(buf.toString());

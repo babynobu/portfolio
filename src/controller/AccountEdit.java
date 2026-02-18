@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.AccountCRUDDto;
-import model.AccountListDao;
+import model.AccountDao;
+import model.AccountDto;
 import model.UserInfoDto;
 
 public class AccountEdit extends HttpServlet{
@@ -38,11 +38,11 @@ public class AccountEdit extends HttpServlet{
 				//アカウント情報を取得
 				String userId = request.getParameter("userId");
 				String role =request.getParameter("role");
-				AccountCRUDDto dto = new AccountCRUDDto();
-				AccountListDao dao = new AccountListDao();
+				AccountDto dto = new AccountDto();
+				AccountDao dao = new AccountDao();
 
 				if ("1".equals(role) || "0".equals(role)) {
-					dto = dao.editAccount(userId);
+					dto = dao.selectEditAccount(userId);
 				}
 
 				//アカウント情報をセット

@@ -10,23 +10,30 @@ import java.util.List;
 
 public class AccountListBL {
 
-	/**----------------------------------------------------
-	 * ■selectAccountListメソッド
-	 * DBに接続し、アカウントリストを抽出
-	 * 引数	 ；なし
-	 * 戻り値：（List<AccountListDto>型）
-	 -----------------------------------------------------*/
+    /**----------------------------------------------------
+     * ■selectAccountListメソッド（ページネーション用）
+     * 概要：指定件数・開始位置で取得
+     * 引数：limit  取得件数
+     *       offset 開始位置
+     -----------------------------------------------------*/
+    public List<AccountDto> selectAccountList(int limit, int offset){
 
-	public List<AccountListDto> selectAccountList(){
+        List<AccountDto> list = new ArrayList<>();
 
-		//戻り値用の型を生成
-		List<AccountListDto> list = new ArrayList<>();
+        AccountDao dao = new AccountDao();
+        list = dao.selectAccountList(limit, offset);
 
-		//DB接続
-		AccountListDao dao = new AccountListDao();
-		list = dao.selectAccountList();
+        return list;
+    }
 
-		return list;
-	}
+    /**----------------------------------------------------
+     * ■countAccountメソッド
+     * 概要：アカウント総件数を取得
+     -----------------------------------------------------*/
+    public int countAccount() {
+
+        AccountDao dao = new AccountDao();
+        return dao.countAccount();
+    }
 
 }
