@@ -20,7 +20,7 @@ public class UserInfoDao {
 	String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
 
 	//接続先のデータベース
-	String JDBC_URL    = "jdbc:mysql://localhost/portfolio_db?characterEncoding=UTF-8&serverTimezone=JST&useSSL=false";
+	String JDBC_URL    = "jdbc:mysql://example-app-db-1:3306/portfolio_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&useSSL=false&allowPublicKeyRetrieval=true";
 
 	//接続するユーザー名
 	String USER_ID     = "test_user";

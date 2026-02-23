@@ -13,7 +13,7 @@ public class PublicContactUsDao {
 
     // CategoryDaoと同じ
     String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-    String JDBC_URL    = "jdbc:mysql://localhost/portfolio_db?characterEncoding=UTF-8&serverTimezone=JST&useSSL=false";
+    String JDBC_URL    = "jdbc:mysql://example-app-db-1:3306/portfolio_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&useSSL=false&allowPublicKeyRetrieval=true";
     String USER_ID     = "test_user";
     String USER_PASS   = "test_pass";
 
