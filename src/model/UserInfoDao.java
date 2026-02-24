@@ -79,18 +79,18 @@ public class UserInfoDao {
 			//発行するSQL文の生成（SELECT）
 			StringBuffer buf = new StringBuffer();
 			buf.append(" SELECT               ");
-			buf.append("   USER_ID,          ");
-			buf.append("   LOGIN_ID,          ");
-			buf.append("   USER_NAME,         ");
-			buf.append("   PASSWORD,          ");
-			buf.append("   ROLE               ");
+			buf.append("   user_id,          ");
+			buf.append("   login_id,          ");
+			buf.append("   user_name,         ");
+			buf.append("   password,          ");
+			buf.append("   role               ");
 			buf.append(" FROM                 ");
-			buf.append("   USERS              ");
+			buf.append("   users              ");
 			buf.append(" WHERE                ");
-			buf.append("   LOGIN_ID  = ? AND  ");  //第1パラメータ
-			buf.append("   PASSWORD = ?       ");  //第2パラメータ
-			buf.append("   AND STATUS = 1     ");  //1=有効、0=無効
-			buf.append("   AND IS_DELETED = 0 ");
+			buf.append("   login_id  = ? AND  ");  //第1パラメータ
+			buf.append("   password = ?       ");  //第2パラメータ
+			buf.append("   AND status = 1     ");  //1=有効、0=無効
+			buf.append("   AND is_deleted = 0 ");
 
 			//PreparedStatement（SQL発行用オブジェクト）を生成＆発行するSQLをセット
 			ps = con.prepareStatement(buf.toString());
@@ -108,11 +108,11 @@ public class UserInfoDao {
 			if (rs.next()) {
 				dto = new UserInfoDto();
 				//ResultSetから1行分のレコード情報をDTOへ登録
-				dto.setUserId( rs.getInt("USER_ID"));			//ユーザーID
-				dto.setLoginId( rs.getString("LOGIN_ID")   );	//ログインID
-				dto.setUserName( rs.getString("USER_NAME") );	//ユーザー名
-				dto.setUserPass( rs.getString("PASSWORD")  );	//パスワード
-				dto.setRole( rs.getInt("ROLE")  );				//ユーザー権限
+				dto.setUserId( rs.getInt("user_id"));			//ユーザーID
+				dto.setLoginId( rs.getString("login_id")   );	//ログインID
+				dto.setUserName( rs.getString("user_name") );	//ユーザー名
+				dto.setUserPass( rs.getString("password")  );	//パスワード
+				dto.setRole( rs.getInt("role")  );				//ユーザー権限
 			}
 
 		} catch (SQLException e) {

@@ -84,16 +84,16 @@ public class StampInfoDao {
 			//発行するSQL文の生成（SELECT）
 			StringBuffer buf = new StringBuffer();
 			buf.append(" SELECT                  ");
-			buf.append("   STAMP_NUMBER,         ");
-			buf.append("   STAMP_AT              ");
+			buf.append("   stamp_number,         ");
+			buf.append("   stamp_at              ");
 			buf.append(" FROM                    ");
-			buf.append("   GOOD_STAMP            ");
+			buf.append("   good_atamp            ");
 			buf.append(" WHERE                   ");
-			buf.append("   TARGET_USER_ID = ?    "); //第一パラメータ
-			buf.append("   AND STAMP_AT >=  ?    "); //第二パラメータ
-			buf.append("   AND STAMP_AT <  ?     "); //第三パラメータ
+			buf.append("   target_user_id = ?    "); //第一パラメータ
+			buf.append("   AND stamp_at >=  ?    "); //第二パラメータ
+			buf.append("   AND stamp_at <  ?     "); //第三パラメータ
 			buf.append(" ORDER BY                ");
-			buf.append("   STAMP_AT ASC          ");
+			buf.append("   stamp_at ASC          ");
 
 
 			//PreparedStatement（SQL発行用オブジェクト）を生成＆発行するSQLをセット
@@ -121,8 +121,8 @@ public class StampInfoDao {
 			while (rs.next()) {
 				StampInfoDto dto = new StampInfoDto();
 				//ResultSetから1行分のレコード情報をDTOへ登録
-				dto.setStampNumber(   rs.getInt("STAMP_NUMBER")   );   	 //いいねNo.
-				dto.setStampAt(  rs.getTimestamp("STAMP_AT")  );   		 //タイムスタンプ
+				dto.setStampNumber(   rs.getInt("stamp_number")   );   	 //いいねNo.
+				dto.setStampAt(  rs.getTimestamp("stamp_at")  );   		 //タイムスタンプ
 
 				//listに追加
 				list.add(dto);
@@ -215,16 +215,16 @@ public class StampInfoDao {
 			//発行するSQL文の生成（SELECT）
 			StringBuffer buf = new StringBuffer();
 			buf.append(" SELECT                  ");
-			buf.append("   STAMP_NUMBER,         ");
-			buf.append("   STAMP_AT              ");
+			buf.append("   stamp_number,         ");
+			buf.append("   stamp_at              ");
 			buf.append(" FROM                    ");
-			buf.append("   GOOD_STAMP            ");
+			buf.append("   good_atamp            ");
 			buf.append(" WHERE                   ");
-			buf.append("   TARGET_USER_ID = ?    "); //第一パラメータ
-			buf.append("   AND STAMP_AT >= ?     "); //第二パラメータ
-			buf.append("   AND STAMP_AT < ?      "); //第三パラメータ
+			buf.append("   target_user_id = ?    "); //第一パラメータ
+			buf.append("   AND stamp_at >= ?     "); //第二パラメータ
+			buf.append("   AND stamp_at < ?      "); //第三パラメータ
 			buf.append(" ORDER BY                ");
-			buf.append("   STAMP_AT ASC          ");
+			buf.append("   stamp_at ASC          ");
 
 
 			//PreparedStatement（SQL発行用オブジェクト）を生成＆発行するSQLをセット
@@ -249,8 +249,8 @@ public class StampInfoDao {
 			while (rs.next()) {
 				StampInfoDto dto = new StampInfoDto();
 				//ResultSetから1行分のレコード情報をDTOへ登録
-				dto.setStampNumber(   rs.getInt("STAMP_NUMBER")   );   	 //いいねNo.
-				dto.setStampAt(  rs.getTimestamp("STAMP_AT")  );   		 //タイムスタンプ
+				dto.setStampNumber(   rs.getInt("stamp_number")   );   	 //いいねNo.
+				dto.setStampAt(  rs.getTimestamp("stamp_at")  );   		 //タイムスタンプ
 
 				//listに追加
 				list.add(dto);
