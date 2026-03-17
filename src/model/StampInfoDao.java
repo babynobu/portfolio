@@ -87,7 +87,7 @@ public class StampInfoDao {
 			buf.append("   stamp_number,         ");
 			buf.append("   stamp_at              ");
 			buf.append(" FROM                    ");
-			buf.append("   good_atamp            ");
+			buf.append("   good_stamp            ");
 			buf.append(" WHERE                   ");
 			buf.append("   target_user_id = ?    "); //第一パラメータ
 			buf.append("   AND stamp_at >=  ?    "); //第二パラメータ
@@ -218,7 +218,7 @@ public class StampInfoDao {
 			buf.append("   stamp_number,         ");
 			buf.append("   stamp_at              ");
 			buf.append(" FROM                    ");
-			buf.append("   good_atamp            ");
+			buf.append("   good_stamp            ");
 			buf.append(" WHERE                   ");
 			buf.append("   target_user_id = ?    "); //第一パラメータ
 			buf.append("   AND stamp_at >= ?     "); //第二パラメータ
