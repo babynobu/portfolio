@@ -9,34 +9,12 @@ import java.time.LocalDate;
 
 public class GoodStampDao {
 
-	//-------------------------------------------
-	//データベースへの接続情報
-	//-------------------------------------------
-
-	//JDBCドライバの相対パス
-	String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-
-	//接続先のデータベース
-	String JDBC_URL = "jdbc:mysql://touma-portfolio-db:3306/portfolio_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&useSSL=false&allowPublicKeyRetrieval=true";
-
-	//接続するユーザー名
-	String USER_ID     = "test_user";
-
-	//接続するユーザーのパスワード
-	String USER_PASS   = "test_pass";
-
 	//----------------------------------------------------------------
 	//メソッド
 	//----------------------------------------------------------------
 	public int addLikeAndGetCount(int targetUserId) {
 
-		try {
-			Class.forName(DRIVER_NAME);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
-		try (Connection con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS)) {
+		try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 
 			LocalDate today = LocalDate.now();
 			LocalDate firstDayOfThisMonth = today.withDayOfMonth(1);

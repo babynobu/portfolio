@@ -16,22 +16,6 @@ import java.util.List;
 
 public class CategoryDao {
 
-	//-------------------------------------------
-	//データベースへの接続情報
-	//-------------------------------------------
-
-	//JDBCドライバの相対パス
-	String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-
-	//接続先のデータベース
-	String JDBC_URL = "jdbc:mysql://touma-portfolio-db:3306/portfolio_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&useSSL=false&allowPublicKeyRetrieval=true";
-
-	//接続するユーザー名
-	String USER_ID     = "test_user";
-
-	//接続するユーザーのパスワード
-	String USER_PASS   = "test_pass";
-
 	//----------------------------------------------------------------
 	//メソッド
 	//----------------------------------------------------------------
@@ -44,15 +28,6 @@ public class CategoryDao {
 	 *----------------------------------------------------------------------**/
 
 	public List<CategoryDto> selectCategoryList(){
-
-		//-------------------------------------------
-		//JDBCドライバのロード
-		//-------------------------------------------
-		try {
-			Class.forName(DRIVER_NAME);       //JDBCドライバをロード＆接続先として指定
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 
 		//-------------------------------------------
 		//SQL発行
@@ -72,7 +47,7 @@ public class CategoryDao {
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
 			//-------------------------------------------
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			//-------------------------------------------
 			//SQL文の送信 ＆ 結果の取得
@@ -163,15 +138,6 @@ public class CategoryDao {
 	public CategoryDto editCategory(String cid){
 
 		//-------------------------------------------
-		//JDBCドライバのロード
-		//-------------------------------------------
-		try {
-			Class.forName(DRIVER_NAME);       //JDBCドライバをロード＆接続先として指定
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		//-------------------------------------------
 		//SQL発行
 		//-------------------------------------------
 
@@ -189,7 +155,7 @@ public class CategoryDao {
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
 			//-------------------------------------------
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			//-------------------------------------------
 			//SQL文の送信 ＆ 結果の取得
@@ -280,15 +246,11 @@ public class CategoryDao {
         boolean result = true;
 
         try {
-            //-------------------------------------------
-            // JDBCドライバのロード
-            //-------------------------------------------
-            Class.forName(DRIVER_NAME);
 
             //-------------------------------------------
             // 接続の確立
             //-------------------------------------------
-            con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+            con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
             con.setAutoCommit(false);   // トランザクション開始
 
             //-------------------------------------------
@@ -362,14 +324,9 @@ public class CategoryDao {
 
         try {
             //-------------------------------------------
-            // JDBCドライバのロード
-            //-------------------------------------------
-            Class.forName(DRIVER_NAME);
-
-            //-------------------------------------------
             // 接続の確立
             //-------------------------------------------
-            con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+            con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
             con.setAutoCommit(false);   // トランザクション開始
 
             //-------------------------------------------
@@ -435,12 +392,6 @@ public class CategoryDao {
      *----------------------------------------------------------------------**/
     public List<CategoryDto> selectActiveCategoryList(){
 
-        try {
-            Class.forName(DRIVER_NAME);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
         Connection con = null;
         PreparedStatement ps  = null;
         ResultSet rs  = null;
@@ -448,7 +399,7 @@ public class CategoryDao {
         List<CategoryDto> list = new ArrayList<>();
 
         try {
-            con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+            con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
             StringBuffer buf = new StringBuffer();
             buf.append(" SELECT                ");

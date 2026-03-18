@@ -11,11 +11,6 @@ import java.util.List;
 
 public class RankingDao {
 
-    String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-    String JDBC_URL = "jdbc:mysql://touma-portfolio-db:3306/portfolio_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&useSSL=false&allowPublicKeyRetrieval=true";
-    String USER_ID     = "test_user";
-    String USER_PASS   = "test_pass";
-
     /** 今月いいねランキング（0も含む）10件ずつ取得 */
     public List<MonthlyLikeRankingDto> selectMonthlyRanking(int limit, int offset) {
 
@@ -27,12 +22,6 @@ public class RankingDao {
         LocalDate firstDayOfNextMonth = firstDayOfThisMonth.plusMonths(1);
         Timestamp start = Timestamp.valueOf(firstDayOfThisMonth.atStartOfDay());
         Timestamp end   = Timestamp.valueOf(firstDayOfNextMonth.atStartOfDay());
-
-        try {
-            Class.forName(DRIVER_NAME);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
         StringBuffer buf = new StringBuffer();
         buf.append(" SELECT ");
@@ -55,7 +44,7 @@ public class RankingDao {
         buf.append(" ORDER BY like_count DESC, u.user_id ASC ");
         buf.append(" LIMIT ? OFFSET ? ");
 
-        try (Connection con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+        try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
              PreparedStatement ps = con.prepareStatement(buf.toString())) {
 
             ps.setTimestamp(1, start);
@@ -84,15 +73,9 @@ public class RankingDao {
     /** ランキング母数（0いいねも含めるので users 件数） */
     public int countMonthlyRankingTargets() {
 
-        try {
-            Class.forName(DRIVER_NAME);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
         String sql = "SELECT COUNT(*) FROM users WHERE is_deleted = 0 AND role = 0";
 
-        try (Connection con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+        try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 

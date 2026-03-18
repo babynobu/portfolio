@@ -16,14 +16,6 @@ import java.util.List;
  *----------------------------------------------------------------------**/
 public class AccountDao {
 
-	//-------------------------------------------
-	// データベースへの接続情報
-	//-------------------------------------------
-	String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-	String JDBC_URL = "jdbc:mysql://touma-portfolio-db:3306/portfolio_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&useSSL=false&allowPublicKeyRetrieval=true";
-	String USER_ID     = "test_user";
-	String USER_PASS   = "test_pass";
-
 	//----------------------------------------------------------------
 	// メソッド
 	//----------------------------------------------------------------
@@ -39,7 +31,7 @@ public class AccountDao {
 		String sql = "SELECT COUNT(*) FROM users WHERE login_id = ?";
 
 		try (
-				Connection con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+				Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 				PreparedStatement ps = con.prepareStatement(sql)
 		) {
 			ps.setString(1, loginId);
@@ -72,7 +64,7 @@ public class AccountDao {
 				"  AND user_id <> ?";
 
 		try (
-				Connection con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+				Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 				PreparedStatement ps = con.prepareStatement(sql)
 		) {
 			ps.setString(1, loginId);
@@ -107,9 +99,8 @@ public class AccountDao {
 	    boolean result = true;
 
 	    try {
-	        Class.forName(DRIVER_NAME);
 
-	        con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+	        con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 	        con.setAutoCommit(false);
 
 	        //-------------------------------------------
@@ -226,9 +217,8 @@ public class AccountDao {
 	    boolean result = true;
 
 	    try {
-	        Class.forName(DRIVER_NAME);
 
-	        con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+	        con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 	        con.setAutoCommit(false);
 
 	        //-------------------------------------------
@@ -378,9 +368,8 @@ public class AccountDao {
 	    boolean result = true;
 
 	    try {
-	        Class.forName(DRIVER_NAME);
 
-	        con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+	        con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 	        con.setAutoCommit(false);
 
 	        //-------------------------------------------
@@ -514,8 +503,8 @@ public class AccountDao {
 	    AccountDto dto = new AccountDto();
 
 	    try {
-	        Class.forName(DRIVER_NAME);
-	        con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+
+	        con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 	        StringBuffer buf = new StringBuffer();
 	        buf.append(" SELECT                    ");
@@ -596,8 +585,8 @@ public class AccountDao {
 		List<AccountDto> list = new ArrayList<>();
 
 		try {
-			Class.forName(DRIVER_NAME);
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			StringBuffer buf = new StringBuffer();
 			buf.append(" SELECT                 ");
@@ -657,9 +646,9 @@ public class AccountDao {
 		boolean result = true;
 
 		try {
-			Class.forName(DRIVER_NAME);
 
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 			con.setAutoCommit(false);
 
 			StringBuffer bufUser = new StringBuffer();
@@ -722,9 +711,9 @@ public class AccountDao {
 		boolean result = true;
 
 		try {
-			Class.forName(DRIVER_NAME);
 
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 			con.setAutoCommit(false);
 
 			StringBuffer bufUser = new StringBuffer();
@@ -789,8 +778,8 @@ public class AccountDao {
 		List<AccountDto> list = new ArrayList<>();
 
 		try {
-			Class.forName(DRIVER_NAME);
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			StringBuffer buf = new StringBuffer();
 			buf.append(" SELECT                 ");
@@ -852,8 +841,8 @@ public class AccountDao {
 		int count = 0;
 
 		try {
-			Class.forName(DRIVER_NAME);
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			String sql = "SELECT COUNT(*) FROM users WHERE is_deleted = 0";
 			ps = con.prepareStatement(sql);
@@ -893,8 +882,8 @@ public class AccountDao {
 	    List<PublicAccountListDto> list = new ArrayList<>();
 
 	    try {
-	        Class.forName(DRIVER_NAME);
-	        con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+
+	        con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 	        StringBuffer buf = new StringBuffer();
 	        buf.append(" SELECT ");
@@ -967,8 +956,8 @@ public class AccountDao {
 		int count = 0;
 
 		try {
-			Class.forName(DRIVER_NAME);
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			String sql = "SELECT COUNT(*) FROM users WHERE is_deleted = 0 AND role = 0";
 			ps = con.prepareStatement(sql);
@@ -1006,8 +995,8 @@ public class AccountDao {
 	    PublicAccountDetailDto dto = null;
 
 	    try {
-	        Class.forName(DRIVER_NAME);
-	        con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+
+	        con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 	        // 今月の範囲
 	        java.time.LocalDate today = java.time.LocalDate.now();

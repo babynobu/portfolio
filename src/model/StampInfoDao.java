@@ -19,22 +19,6 @@ import java.util.List;
 
 public class StampInfoDao {
 
-	//-------------------------------------------
-	//データベースへの接続情報
-	//-------------------------------------------
-
-	//JDBCドライバの相対パス
-	String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-
-	//接続先のデータベース
-	String JDBC_URL = "jdbc:mysql://touma-portfolio-db:3306/portfolio_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&useSSL=false&allowPublicKeyRetrieval=true";
-
-	//接続するユーザー名
-	String USER_ID     = "test_user";
-
-	//接続するユーザーのパスワード
-	String USER_PASS   = "test_pass";
-
 	//----------------------------------------------------------------
 	//メソッド
 	//----------------------------------------------------------------
@@ -47,15 +31,6 @@ public class StampInfoDao {
 	 *----------------------------------------------------------------------**/
 
 	public List<StampInfoDto> monthlyGetStampInfo(int userId){
-
-		//-------------------------------------------
-		//JDBCドライバのロード
-		//-------------------------------------------
-		try {
-			Class.forName(DRIVER_NAME);       //JDBCドライバをロード＆接続先として指定
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 
 		//-------------------------------------------
 		//SQL発行
@@ -75,7 +50,7 @@ public class StampInfoDao {
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
 			//-------------------------------------------
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			//-------------------------------------------
 			//SQL文の送信 ＆ 結果の取得
@@ -180,15 +155,6 @@ public class StampInfoDao {
 	public List<StampInfoDto> yearlyGetStampInfo(int userId){
 
 		//-------------------------------------------
-		//JDBCドライバのロード
-		//-------------------------------------------
-		try {
-			Class.forName(DRIVER_NAME);       //JDBCドライバをロード＆接続先として指定
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		//-------------------------------------------
 		//SQL発行
 		//-------------------------------------------
 
@@ -206,7 +172,7 @@ public class StampInfoDao {
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
 			//-------------------------------------------
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			//-------------------------------------------
 			//SQL文の送信 ＆ 結果の取得

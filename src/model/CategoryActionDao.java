@@ -7,10 +7,6 @@ import java.sql.ResultSet;
 
 public class CategoryActionDao {
 
-    private static final String JDBC_URL = "jdbc:mysql://touma-portfolio-db:3306/portfolio_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&useSSL=false&allowPublicKeyRetrieval=true";
-    private static final String DB_USER = "test_user";
-    private static final String DB_PASS = "test_pass";
-
     /**
      * ステータスを切り替えて、新しいステータスを返す
      */
@@ -19,7 +15,7 @@ public class CategoryActionDao {
         int currentStatus;
         int newStatus;
 
-        try (Connection con = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
+        try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 
             // ① 現在のステータス取得（未削除のみ）
             String selectSql =
@@ -57,7 +53,7 @@ public class CategoryActionDao {
      */
     public void restore(int categoryId) throws Exception {
 
-    	try (Connection con = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
+    	try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 
     		String sql =
     			"UPDATE users SET is_deleted = 0 WHERE user_id = ? AND is_deleted= 1";
@@ -74,7 +70,7 @@ public class CategoryActionDao {
      */
     public void logicalDelete(int categoryId) throws Exception {
 
-        try (Connection con = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
+        try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 
             String sql =
                 "UPDATE contact_categories SET is_deleted = 1 WHERE category_id = ? AND is_deleted = 0";
@@ -91,7 +87,7 @@ public class CategoryActionDao {
      */
     public void physicsDelete(int categoryId) throws Exception {
 
-        try (Connection con = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
+        try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 
             String sql =
                 "DELETE FROM contact_categories WHERE category_id = ? ";

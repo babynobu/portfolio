@@ -16,21 +16,6 @@ import java.util.List;
 
 public class ContactUsListDao {
 
-	//-------------------------------------------
-	//データベースへの接続情報
-	//-------------------------------------------
-
-	//JDBCドライバの相対パス
-	String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-
-	//接続先のデータベース
-	String JDBC_URL = "jdbc:mysql://touma-portfolio-db:3306/portfolio_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&useSSL=false&allowPublicKeyRetrieval=true";
-	//接続するユーザー名
-	String USER_ID     = "test_user";
-
-	//接続するユーザーのパスワード
-	String USER_PASS   = "test_pass";
-
 	//----------------------------------------------------------------
 	//メソッド
 	//----------------------------------------------------------------
@@ -43,15 +28,6 @@ public class ContactUsListDao {
 	 *----------------------------------------------------------------------**/
 
 	public List<ContactUsListDto> selectContactUsList(){
-
-		//-------------------------------------------
-		//JDBCドライバのロード
-		//-------------------------------------------
-		try {
-			Class.forName(DRIVER_NAME);       //JDBCドライバをロード＆接続先として指定
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 
 		//-------------------------------------------
 		//SQL発行
@@ -71,7 +47,7 @@ public class ContactUsListDao {
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
 			//-------------------------------------------
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			//-------------------------------------------
 			//SQL文の送信 ＆ 結果の取得
@@ -171,15 +147,6 @@ public class ContactUsListDao {
 	public ContactUsListDto editContactUs(int cuid){
 
 		//-------------------------------------------
-		//JDBCドライバのロード
-		//-------------------------------------------
-		try {
-			Class.forName(DRIVER_NAME);       //JDBCドライバをロード＆接続先として指定
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		//-------------------------------------------
 		//SQL発行
 		//-------------------------------------------
 
@@ -197,7 +164,7 @@ public class ContactUsListDao {
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
 			//-------------------------------------------
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			//-------------------------------------------
 			//SQL文の送信 ＆ 結果の取得
@@ -296,15 +263,6 @@ public class ContactUsListDao {
 	public boolean updateContactUs(int cuid, String st){
 
 		//-------------------------------------------
-		//JDBCドライバのロード
-		//-------------------------------------------
-		try {
-			Class.forName(DRIVER_NAME);       //JDBCドライバをロード＆接続先として指定
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		//-------------------------------------------
 		//SQL発行
 		//-------------------------------------------
 
@@ -321,7 +279,7 @@ public class ContactUsListDao {
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
 			//-------------------------------------------
-			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
 			//-------------------------------------------
 			//SQL文の送信 ＆ 結果の取得
