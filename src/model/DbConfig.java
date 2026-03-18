@@ -6,8 +6,9 @@ public class DbConfig {
     public static final String DB_PASS = "test_pass";
 
     public static final String JDBC_URL =
-            "jdbc:mysql://localhost/portfolio_db"
+            "jdbc:mysql://localhost:3306/portfolio_db"
             + "?characterEncoding=UTF-8"
-            + "&serverTimezone=JST"
-            + "&useSSL=false";
+            + "&serverTimezone=Asia/Tokyo"
+            + "&useSSL=false"
+            + "&allowPublicKeyRetrieval=true";
 }
