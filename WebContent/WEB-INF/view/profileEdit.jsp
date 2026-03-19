@@ -146,8 +146,8 @@ input[type="submit"], button {
       <p>
         現在のプロフィール画像<br>
         <img class="profile"
-             src="<%= request.getContextPath() %>/${profileEdit.profileImagePath}"
-             alt="プロフィール画像">
+             src="<c:url value='${r.profileImagePath}' />"
+             alt="profile">
       </p>
     </c:if>
 

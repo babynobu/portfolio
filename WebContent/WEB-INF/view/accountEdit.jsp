@@ -228,8 +228,8 @@
         <div class="field" style="grid-column: 1 / -1;">
           <label class="field-label">現在のプロフィール画像</label>
           <img class="profile-img"
-            src="<%= request.getContextPath() %>/${account.profileImagePath}"
-            alt="プロフィール画像">
+            src="<c:url value='${r.profileImagePath}' />"
+            alt="profile">
         </div>
       </c:if>
 

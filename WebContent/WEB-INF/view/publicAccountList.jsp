@@ -11,148 +11,146 @@
 <style>
 /* Aパターン：学習用・最低限のレスポンシブ対応（カード一覧） */
 body {
-  margin: 0;
-  padding: 16px;
-  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+	margin: 0;
+	padding: 16px;
+	font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo",
+		sans-serif;
 }
 
 .area {
-  max-width: 960px;
+	max-width: 960px;
 }
 
 /* グリッドはそのまま活用（端末幅に応じて自動で段組み） */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 16px;
 }
 
 .card {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 12px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	padding: 12px;
 }
 
 /* 画像は見切れ防止＆スマホでも崩れない */
 img.avatar {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  display: block;
+	width: 100%;
+	height: 180px;
+	object-fit: cover;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	display: block;
 }
 
 /* ボタンエリア */
 .actions {
-  margin-top: 10px;
+	margin-top: 10px;
 }
 
 /* スマホは縦並び（押しやすい）、PCは横並び */
-.actions button,
-.actions a {
-  display: inline-block;
-  padding: 8px;
-  border: 1px solid #aaa;
-  background: #fff;
-  text-align: center;
-  text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  box-sizing: border-box;
-  width: 100%;
-  margin-top: 8px;
+.actions button, .actions a {
+	display: inline-block;
+	padding: 8px;
+	border: 1px solid #aaa;
+	background: #fff;
+	text-align: center;
+	text-decoration: none;
+	color: #000;
+	cursor: pointer;
+	box-sizing: border-box;
+	width: 100%;
+	margin-top: 8px;
 }
 
-@media (min-width: 481px) {
-  .actions {
-    display: flex;
-    gap: 8px;
-  }
-  .actions button,
-  .actions a {
-    width: auto;
-    flex: 1;
-    margin-top: 0;
-  }
+@media ( min-width : 481px) {
+	.actions {
+		display: flex;
+		gap: 8px;
+	}
+	.actions button, .actions a {
+		width: auto;
+		flex: 1;
+		margin-top: 0;
+	}
 }
 
 /* ページネーション */
 .pager {
-  margin-top: 16px;
+	margin-top: 16px;
 }
 
 .pager a, .pager strong {
-  display: inline-block;
-  margin-right: 8px;
+	display: inline-block;
+	margin-right: 8px;
 }
 </style>
 </head>
 
 <body>
-  <div class="area">
-    <h2>公開プロフィール一覧</h2>
+	<div class="area">
+		<h2>公開プロフィール一覧</h2>
 
-    <div class="grid">
-      <c:forEach var="r" items="${PUBLIC_ACCOUNT_LIST}">
-        <div class="card">
-          <c:choose>
-            <c:when test="${not empty r.profileImagePath}">
-              <img class="avatar"
-                   src="${pageContext.request.contextPath}${r.profileImagePath}"
-                   alt="profile">
-            </c:when>
-            <c:otherwise>
-              <img class="avatar"
-                   src="${pageContext.request.contextPath}/img/profile/default.png"
-                   alt="default">
-            </c:otherwise>
-          </c:choose>
+		<div class="grid">
+			<c:forEach var="r" items="${PUBLIC_ACCOUNT_LIST}">
+				<div class="card">
+					<c:choose>
+						<c:when test="${not empty r.profileImagePath}">
+							<img class="avatar" src="<c:url value='${r.profileImagePath}' />"
+								alt="profile">
+						</c:when>
+						<c:otherwise>
+							<img class="avatar"
+								src="<c:url value='/img/profile/default.png' />" alt="default">
+						</c:otherwise>
+					</c:choose>
 
-          <div class="actions">
-            <button type="button" onclick="like(${r.userId}, this)">
-              今月いいね <span class="likeCount">${r.likeCount}</span>
-            </button>
 
-            <a href="<%=request.getContextPath()%>/PublicAccountDetail?userId=${r.userId}&from=list&page=${currentPage}">
-              詳細
-            </a>
-          </div>
-        </div>
-      </c:forEach>
-    </div>
+					<div class="actions">
+						<button type="button" onclick="like(${r.userId}, this)">
+							今月いいね <span class="likeCount">${r.likeCount}</span>
+						</button>
 
-    <!-- ページネーション -->
-    <c:if test="${totalPage >= 2}">
-      <div class="pager">
-        <c:if test="${currentPage > 1}">
-          <a href="?page=${currentPage - 1}">前へ</a>
-        </c:if>
+						<a
+							href="<%=request.getContextPath()%>/PublicAccountDetail?userId=${r.userId}&from=list&page=${currentPage}">
+							詳細 </a>
+					</div>
+				</div>
+			</c:forEach>
+		</div>
 
-        <c:forEach var="p" begin="1" end="${totalPage}">
-          <c:choose>
-            <c:when test="${p == currentPage}">
-              <strong>${p}</strong>
-            </c:when>
-            <c:otherwise>
-              <a href="?page=${p}">${p}</a>
-            </c:otherwise>
-          </c:choose>
-        </c:forEach>
+		<!-- ページネーション -->
+		<c:if test="${totalPage >= 2}">
+			<div class="pager">
+				<c:if test="${currentPage > 1}">
+					<a href="?page=${currentPage - 1}">前へ</a>
+				</c:if>
 
-        <c:if test="${currentPage < totalPage}">
-          <a href="?page=${currentPage + 1}">次へ</a>
-        </c:if>
-      </div>
-    </c:if>
+				<c:forEach var="p" begin="1" end="${totalPage}">
+					<c:choose>
+						<c:when test="${p == currentPage}">
+							<strong>${p}</strong>
+						</c:when>
+						<c:otherwise>
+							<a href="?page=${p}">${p}</a>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
 
-    <br>
-    <form action="<%=request.getContextPath()%>/PublicHome" method="get">
-      <button type="submit">戻る</button>
-    </form>
-  </div>
+				<c:if test="${currentPage < totalPage}">
+					<a href="?page=${currentPage + 1}">次へ</a>
+				</c:if>
+			</div>
+		</c:if>
 
-<script>
+		<br>
+		<form action="<%=request.getContextPath()%>/PublicHome" method="get">
+			<button type="submit">戻る</button>
+		</form>
+	</div>
+
+	<script>
 function like(userId, btn) {
   fetch('<%=request.getContextPath()%>/PublicLike', {
     method: 'POST',

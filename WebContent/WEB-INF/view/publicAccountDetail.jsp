@@ -11,144 +11,142 @@
 <style>
 /* Aパターン：学習用・最低限のレスポンシブ対応 */
 body {
-  margin: 0;
-  padding: 16px;
-  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+	margin: 0;
+	padding: 16px;
+	font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo",
+		sans-serif;
 }
 
 .area {
-  max-width: 760px;
+	max-width: 760px;
 }
 
 img.avatar {
-  width: 100%;
-  height: auto;
-  max-height: 520px;
-  object-fit: contain;      /* 見切れ防止 */
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  display: block;
+	width: 100%;
+	height: auto;
+	max-height: 520px;
+	object-fit: contain; /* 見切れ防止 */
+	border: 1px solid #ddd;
+	border-radius: 12px;
+	display: block;
 }
 
 /* 行 */
 .row {
-  margin-top: 10px;
+	margin-top: 10px;
 }
 
 .label {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 /* ボタン・リンク（Aパターンなので軽め） */
 .actions {
-  margin-top: 14px;
+	margin-top: 14px;
 }
 
-.actions button,
-.actions a {
-  display: inline-block;
-  padding: 10px;
-  border: 1px solid #aaa;
-  text-decoration: none;
-  color: #000;
-  background: #fff;
-  cursor: pointer;
-  text-align: center;
-  margin-right: 8px;
-  margin-top: 8px;
-  box-sizing: border-box;
+.actions button, .actions a {
+	display: inline-block;
+	padding: 10px;
+	border: 1px solid #aaa;
+	text-decoration: none;
+	color: #000;
+	background: #fff;
+	cursor: pointer;
+	text-align: center;
+	margin-right: 8px;
+	margin-top: 8px;
+	box-sizing: border-box;
 }
 
 /* スマホは押しやすく横いっぱい、PCは自然幅 */
 .actions button {
-  width: 100%;
-  max-width: 520px;
-  font-size: 16px;
+	width: 100%;
+	max-width: 520px;
+	font-size: 16px;
 }
 
 .actions a {
-  width: 100%;
-  max-width: 520px;
+	width: 100%;
+	max-width: 520px;
 }
 
-@media (min-width: 481px) {
-  .actions button,
-  .actions a {
-    width: auto;
-    min-width: 180px;
-  }
+@media ( min-width : 481px) {
+	.actions button, .actions a {
+		width: auto;
+		min-width: 180px;
+	}
 }
 </style>
 </head>
 
 <body>
-  <div class="area">
-    <h2>プロフィール詳細</h2>
+	<div class="area">
+		<h2>プロフィール詳細</h2>
 
-    <c:choose>
-      <c:when test="${not empty ACCOUNT.profileImagePath}">
-        <img class="avatar"
-             src="${pageContext.request.contextPath}${ACCOUNT.profileImagePath}"
-             alt="profile">
-      </c:when>
-      <c:otherwise>
-        <img class="avatar"
-             src="${pageContext.request.contextPath}/img/profile/default.png"
-             alt="default">
-      </c:otherwise>
-    </c:choose>
+		<c:choose>
+			<c:when test="${not empty r.profileImagePath}">
+				<img class="avatar" src="<c:url value='${r.profileImagePath}' />"
+					alt="profile">
+			</c:when>
+			<c:otherwise>
+				<img class="avatar" src="<c:url value='/img/profile/default.png' />"
+					alt="default">
+			</c:otherwise>
+		</c:choose>
 
-    <div class="row">
-      <span class="label">名前：</span>${ACCOUNT.userName}
-    </div>
+		<div class="row">
+			<span class="label">名前：</span>${ACCOUNT.userName}
+		</div>
 
-    <div class="row">
-      <span class="label">フリガナ：</span>${ACCOUNT.userNameKana}
-    </div>
+		<div class="row">
+			<span class="label">フリガナ：</span>${ACCOUNT.userNameKana}
+		</div>
 
-    <div class="row">
-      <span class="label">性別：</span>
-      <c:choose>
-        <c:when test="${ACCOUNT.gender == 1}">男性</c:when>
-        <c:when test="${ACCOUNT.gender == 2}">女性</c:when>
-        <c:otherwise>未設定</c:otherwise>
-      </c:choose>
-    </div>
+		<div class="row">
+			<span class="label">性別：</span>
+			<c:choose>
+				<c:when test="${ACCOUNT.gender == 1}">男性</c:when>
+				<c:when test="${ACCOUNT.gender == 2}">女性</c:when>
+				<c:otherwise>未設定</c:otherwise>
+			</c:choose>
+		</div>
 
-    <div class="row">
-      <span class="label">年齢：</span>
-      <c:choose>
-        <c:when test="${not empty ACCOUNT.age}">${ACCOUNT.age}歳</c:when>
-        <c:otherwise>未設定</c:otherwise>
-      </c:choose>
-    </div>
+		<div class="row">
+			<span class="label">年齢：</span>
+			<c:choose>
+				<c:when test="${not empty ACCOUNT.age}">${ACCOUNT.age}歳</c:when>
+				<c:otherwise>未設定</c:otherwise>
+			</c:choose>
+		</div>
 
-    <div class="row">
-      <span class="label">自己紹介：</span><br>
-      <c:out value="${ACCOUNT.introduction}" />
-    </div>
+		<div class="row">
+			<span class="label">自己紹介：</span><br>
+			<c:out value="${ACCOUNT.introduction}" />
+		</div>
 
-    <div class="actions">
-      <!-- 既存 PublicLike を使う（非同期） -->
-      <button type="button" onclick="like(${ACCOUNT.userId}, this)">
-        今月いいね <span class="likeCount">${ACCOUNT.monthlyLikeCount}</span>
-      </button>
+		<div class="actions">
+			<!-- 既存 PublicLike を使う（非同期） -->
+			<button type="button" onclick="like(${ACCOUNT.userId}, this)">
+				今月いいね <span class="likeCount">${ACCOUNT.monthlyLikeCount}</span>
+			</button>
 
-      <!-- 戻る -->
-      <c:choose>
-        <c:when test="${from == 'ranking'}">
-          <a href="<%=request.getContextPath()%>/PublicMonthlyRanking?page=${backPage}">ランキングに戻る</a>
-        </c:when>
-        <c:otherwise>
-          <a href="<%=request.getContextPath()%>/PublicAccountList?page=${empty backPage ? 1 : backPage}">
-            一覧に戻る
-          </a>
-        </c:otherwise>
-      </c:choose>
-    </div>
-  </div>
+			<!-- 戻る -->
+			<c:choose>
+				<c:when test="${from == 'ranking'}">
+					<a
+						href="<%=request.getContextPath()%>/PublicMonthlyRanking?page=${backPage}">ランキングに戻る</a>
+				</c:when>
+				<c:otherwise>
+					<a
+						href="<%=request.getContextPath()%>/PublicAccountList?page=${empty backPage ? 1 : backPage}">
+						一覧に戻る </a>
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</div>
 
-<script>
+	<script>
 function like(userId, btn) {
   fetch('<%=request.getContextPath()%>/PublicLike', {
     method: 'POST',
