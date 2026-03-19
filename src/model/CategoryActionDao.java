@@ -15,6 +15,12 @@ public class CategoryActionDao {
         int currentStatus;
         int newStatus;
 
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
         try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 
             // ① 現在のステータス取得（未削除のみ）
@@ -53,6 +59,12 @@ public class CategoryActionDao {
      */
     public void restore(int categoryId) throws Exception {
 
+    	try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
     	try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 
     		String sql =
@@ -70,6 +82,12 @@ public class CategoryActionDao {
      */
     public void logicalDelete(int categoryId) throws Exception {
 
+    	try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
         try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 
             String sql =
@@ -86,6 +104,12 @@ public class CategoryActionDao {
      * 物理削除
      */
     public void physicsDelete(int categoryId) throws Exception {
+
+    	try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
         try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 

@@ -19,6 +19,12 @@ public class PublicContactUsDao {
      *----------------------------------------------------------------------**/
     public boolean insertContactUs(PublicContactUsDto dto) {
 
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
         Connection con = null;
         PreparedStatement ps = null;
 

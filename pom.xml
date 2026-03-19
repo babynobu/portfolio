@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org"
+         xmlns:xsi="http://www.w3.org"
+         xsi:schemaLocation="http://maven.apache.org https://maven.apache.org">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- プロジェクトの情報（自分の環境に合わせて書き換えてOK） -->
+    <groupId>com.example</groupId>
+    <artifactId>portfolio</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- Servlet API (コンパイルに必要、実行はTomcatが持つのでprovided) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- JSP API -->
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- JSTL (JSPでタグライブラリを使っている場合) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>8.0.33</version>
+		</dependency>
+		<!-- MySQL 接続用ドライバ -->
+	    <dependency>
+	        <groupId>com.mysql</groupId>
+	        <artifactId>mysql-connector-j</artifactId>
+	        <version>8.0.33</version>
+	    </dependency>
+
+	    <!-- JSTL (タグライブラリ) 実装 -->
+	    <dependency>
+	        <groupId>org.apache.taglibs</groupId>
+	        <artifactId>taglibs-standard-impl</artifactId>
+	        <version>1.2.5</version>
+	    </dependency>
+
+	    <!-- JSTL (タグライブラリ) 仕様 -->
+	    <dependency>
+	        <groupId>org.apache.taglibs</groupId>
+	        <artifactId>taglibs-standard-spec</artifactId>
+	        <version>1.2.5</version>
+	    </dependency>
+
+	    <!-- Jakarta Mail (メール送信機能) -->
+	    <dependency>
+	        <groupId>com.sun.mail</groupId>
+	        <artifactId>jakarta.mail</artifactId>
+	        <version>2.0.1</version>
+	    </dependency>
+
+	    <!-- Jakarta Activation (メール等のデータ変換) -->
+	    <dependency>
+	        <groupId>com.sun.activation</groupId>
+	        <artifactId>jakarta.activation</artifactId>
+	        <version>2.0.1</version>
+	    </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>portfolio</finalName>
+         <sourceDirectory>src</sourceDirectory> <!-- ここを追加！ -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <!-- WebContentをWebリソースとして指定 -->
+                    <warSourceDirectory>WebContent</warSourceDirectory>
+                    <!-- web.xmlがない古い形式の場合のエラーを回避 -->
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

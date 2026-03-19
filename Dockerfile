@@ -1,21 +1,16 @@
-# ベースイメージとしてopenjdkを使用
-FROM eclipse-temurin:17-jdk-jammy
+# 1. ビルド用環境 (Maven) セクションはすべて削除またはコメントアウト
+# FROM maven:3.8.4-openjdk-17 AS builder ...などは不要です
 
-# Mavenのインストール
-RUN apt-get update && apt-get install -y maven
+# 2. 実行用環境 (Tomcat) だけにする
+FROM tomcat:9.0-jdk17-openjdk-slim
 
-# 作業ディレクトリを設定
-WORKDIR /app
+# デフォルトのアプリを消す
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# プロジェクトファイルをコンテナにコピー
-COPY . /app
+# 【ここを修正】
+# ローカルで書き出したWARファイルを直接Tomcatにコピーします。
+# もしファイル名が portfolio.war なら、以下のように書きます。
+COPY target/portfolio.war /usr/local/tomcat/webapps/ROOT.war
 
-# Mavenビルド
-RUN mvn clean package -DskipTests
-
-# アプリケーション実行
-CMD ["java", "-jar", "target/SampleWeb-0.0.1-SNAPSHOT.jar"]
-
-# 必要なポートを公開
-# ymlファイルのappの右側のポートと合わせる
-EXPOSE 9143
+EXPOSE 8080
+CMD ["catalina.sh", "run"]

@@ -43,7 +43,7 @@ public class CategoryDao {
 		List<CategoryDto> list = new ArrayList<>();
 
 		try {
-
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
 			//-------------------------------------------
@@ -151,6 +151,12 @@ public class CategoryDao {
 		CategoryDto dto = new CategoryDto();
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
 
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
@@ -246,6 +252,12 @@ public class CategoryDao {
         boolean result = true;
 
         try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+        try {
 
             //-------------------------------------------
             // 接続の確立
@@ -323,6 +335,12 @@ public class CategoryDao {
         boolean result = true;
 
         try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+        try {
             //-------------------------------------------
             // 接続の確立
             //-------------------------------------------
@@ -397,6 +415,12 @@ public class CategoryDao {
         ResultSet rs  = null;
 
         List<CategoryDto> list = new ArrayList<>();
+
+        try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
         try {
             con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);

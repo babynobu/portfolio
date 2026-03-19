@@ -1,31 +1,22 @@
 version: '3.9'
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
-      - "8080:9143"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/portfolio_db
-      SPRING_DATASOURCE_USERNAME: test_user
-      SPRING_DATASOURCE_PASSWORD: test_pass
+      - "8080:8080"
     depends_on:
       - db
-    volumes:
-      - ./wait-for-it.sh:/wait-for-it.sh
-    command: ["./wait-for-it.sh", "db:3306", "--", "java", "-jar", "/app/target/SampleWeb-0.0.1-SNAPSHOT.jar"]
 
   db:
     image: mysql:8.0
     container_name: mysql-db
     environment:
-    #DBの初期設定
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: spring_dev
+      MYSQL_ROOT_PASSWORD: root         # rootパスワードは必須なので残します
+      MYSQL_DATABASE: portfolio_db      # DbConfigのURL末尾に合わせる
+      MYSQL_USER: test_user             # DbConfigのDB_USERに合わせる
+      MYSQL_PASSWORD: test_pass         # DbConfigのDB_PASSに合わせる
     ports:
-        #左側:DB接続のための、ローカルやサーバー側の入り口用のポートとして設定
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
 

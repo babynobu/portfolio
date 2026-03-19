@@ -14,6 +14,12 @@ public class GoodStampDao {
 	//----------------------------------------------------------------
 	public int addLikeAndGetCount(int targetUserId) {
 
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
 		try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS)) {
 
 			LocalDate today = LocalDate.now();

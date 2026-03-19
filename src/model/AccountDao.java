@@ -30,6 +30,12 @@ public class AccountDao {
 
 		String sql = "SELECT COUNT(*) FROM users WHERE login_id = ?";
 
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
 		try (
 				Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 				PreparedStatement ps = con.prepareStatement(sql)
@@ -62,6 +68,12 @@ public class AccountDao {
 				"FROM users " +
 				"WHERE login_id = ? " +
 				"  AND user_id <> ?";
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 		try (
 				Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
@@ -97,6 +109,12 @@ public class AccountDao {
 	    ResultSet rs = null;
 
 	    boolean result = true;
+
+	    try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 	    try {
 
@@ -215,6 +233,12 @@ public class AccountDao {
 	    PreparedStatement psProfile = null;
 
 	    boolean result = true;
+
+	    try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 	    try {
 
@@ -368,6 +392,12 @@ public class AccountDao {
 	    boolean result = true;
 
 	    try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+	    try {
 
 	        con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 	        con.setAutoCommit(false);
@@ -503,6 +533,12 @@ public class AccountDao {
 	    AccountDto dto = new AccountDto();
 
 	    try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+	    try {
 
 	        con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
@@ -585,6 +621,12 @@ public class AccountDao {
 		List<AccountDto> list = new ArrayList<>();
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
 
 			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
@@ -644,6 +686,12 @@ public class AccountDao {
 		PreparedStatement psUser = null;
 
 		boolean result = true;
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 		try {
 
@@ -709,6 +757,12 @@ public class AccountDao {
 		PreparedStatement psUser = null;
 
 		boolean result = true;
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 		try {
 
@@ -778,6 +832,12 @@ public class AccountDao {
 		List<AccountDto> list = new ArrayList<>();
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
 
 			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
@@ -841,6 +901,12 @@ public class AccountDao {
 		int count = 0;
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
 
 			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
@@ -880,6 +946,12 @@ public class AccountDao {
 	    ResultSet rs = null;
 
 	    List<PublicAccountListDto> list = new ArrayList<>();
+
+	    try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 	    try {
 
@@ -956,6 +1028,12 @@ public class AccountDao {
 		int count = 0;
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
 
 			con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
 
@@ -993,6 +1071,12 @@ public class AccountDao {
 	    ResultSet rs = null;
 
 	    PublicAccountDetailDto dto = null;
+
+	    try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 	    try {
 

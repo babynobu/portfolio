@@ -29,6 +29,8 @@ public class ContactUsListDao {
 
 	public List<ContactUsListDto> selectContactUsList(){
 
+
+
 		//-------------------------------------------
 		//SQL発行
 		//-------------------------------------------
@@ -43,6 +45,12 @@ public class ContactUsListDao {
 		List<ContactUsListDto> list = new ArrayList<>();
 
 		try {
+
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
 
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
@@ -160,6 +168,12 @@ public class ContactUsListDao {
 		ContactUsListDto dto = new ContactUsListDto();
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
 
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
@@ -273,6 +287,12 @@ public class ContactUsListDao {
 
 		//抽出データ（boolean型）格納用変数
 		boolean executeUpdate = true;
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 		try {
 

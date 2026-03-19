@@ -44,6 +44,12 @@ public class RankingDao {
         buf.append(" ORDER BY like_count DESC, u.user_id ASC ");
         buf.append(" LIMIT ? OFFSET ? ");
 
+        try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
         try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
              PreparedStatement ps = con.prepareStatement(buf.toString())) {
 
@@ -74,6 +80,12 @@ public class RankingDao {
     public int countMonthlyRankingTargets() {
 
         String sql = "SELECT COUNT(*) FROM users WHERE is_deleted = 0 AND role = 0";
+
+        try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
         try (Connection con = DriverManager.getConnection(DbConfig.JDBC_URL, DbConfig.DB_USER, DbConfig.DB_PASS);
              PreparedStatement ps = con.prepareStatement(sql);

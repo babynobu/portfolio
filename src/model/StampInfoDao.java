@@ -46,6 +46,12 @@ public class StampInfoDao {
 		List<StampInfoDto> list = new ArrayList();
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
 
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
@@ -166,6 +172,12 @@ public class StampInfoDao {
 
 		//抽出データ（UserInfoDto型）格納用変数
 		List<StampInfoDto> list = new ArrayList();
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 		try {
 

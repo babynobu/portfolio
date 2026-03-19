@@ -42,6 +42,12 @@ public class UserInfoDao {
 		UserInfoDto dto = null;
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
 
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）

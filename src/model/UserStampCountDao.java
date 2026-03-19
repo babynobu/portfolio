@@ -46,6 +46,12 @@ public class UserStampCountDao {
 		List<UserStampCountDto> list = new ArrayList();
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
 
 			//-------------------------------------------
 			//接続の確立（Connectionオブジェクトの取得）
@@ -181,6 +187,12 @@ public class UserStampCountDao {
 
 		//抽出データ（UserStampCountDto型）格納用変数
 		List<UserStampCountDto> list = new ArrayList();
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 		try {
 
