@@ -172,7 +172,7 @@ public class ExecutePublicContactUs extends HttpServlet {
         sb.append("\n");
         sb.append("お問い合わせを受け付けました。\n");
         sb.append("\n");
-        sb.append("■返信先メールアドレス\n");
+        sb.append("■メールアドレス\n");
         sb.append(email).append("\n");
         sb.append("\n");
         sb.append("■カテゴリー\n");
