@@ -85,8 +85,8 @@ img.avatar {
 		<h2>プロフィール詳細</h2>
 
 		<c:choose>
-			<c:when test="${not empty r.profileImagePath}">
-				<img class="avatar" src="<c:url value='${r.profileImagePath}' />"
+			<c:when test="${not empty ACCOUNT.profileImagePath}">
+				<img class="avatar" src="<c:url value='${ACCOUNT.profileImagePath}' />"
 					alt="profile">
 			</c:when>
 			<c:otherwise>

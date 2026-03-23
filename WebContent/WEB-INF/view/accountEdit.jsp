@@ -228,7 +228,7 @@
         <div class="field" style="grid-column: 1 / -1;">
           <label class="field-label">現在のプロフィール画像</label>
           <img class="profile-img"
-            src="<c:url value='${r.profileImagePath}' />"
+            src="<c:url value='${account.profileImagePath}' />"
             alt="profile">
         </div>
       </c:if>

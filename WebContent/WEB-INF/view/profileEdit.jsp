@@ -146,7 +146,7 @@ input[type="submit"], button {
       <p>
         現在のプロフィール画像<br>
         <img class="profile"
-             src="<c:url value='${r.profileImagePath}' />"
+             src="<c:url value='${profileEdit.profileImagePath}' />"
              alt="profile">
       </p>
     </c:if>
