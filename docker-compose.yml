@@ -2,6 +2,7 @@ version: '3.9'
 services:
   app:
     build: .
+    container_name: touma-app
     environment:
       - PORTFOLIO_SMTP_USER=${PORTFOLIO_SMTP_USER}
       - PORTFOLIO_SMTP_PASS=${PORTFOLIO_SMTP_PASS}
@@ -19,7 +20,7 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: mysql-db
+    container_name: touma-mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: portfolio_db
