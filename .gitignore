@@ -4,3 +4,17 @@
 .env
 .env.*
 !.env.example
+
+# MySQLデータ
+mysql/
+
+# Dockerボリューム系
+data/
+db_data/
+
+# アップロードファイル
+uploads/
+
+# ビルド成果物
+target/
+*.log
