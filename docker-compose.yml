@@ -6,14 +6,14 @@ services:
     environment:
       - PORTFOLIO_SMTP_USER=${PORTFOLIO_SMTP_USER}
       - PORTFOLIO_SMTP_PASS=${PORTFOLIO_SMTP_PASS}
-      - DEPLOY_ENV=local # 本番時は production に変更
+      - DEPLOY_ENV=local # 本番時は production に変更 ローカルはlocal
     ports:
       - "8080:8080"
     volumes:
       # ホスト側のパス : コンテナ内の固定パス
       # ローカル開発時はここを C:/MyAppData/portfolio_images に
       # ローカルデプロイ時はここを C:/MyAppData/portfolio_images:/img_mountに
-      # 本番デプロイ時はここを /var/www/portfolio/img/profile に書き換えます
+      # 本番デプロイ時はここを /home/touma/uploads/profile:/img_mount に書き換えます
       - C:/MyAppData/portfolio_images:/img_mount
     depends_on:
       - db
