@@ -3,24 +3,31 @@ services:
   app:
     build: .
     container_name: touma-app
+    restart: unless-stopped
     environment:
       - PORTFOLIO_SMTP_USER=${PORTFOLIO_SMTP_USER}
       - PORTFOLIO_SMTP_PASS=${PORTFOLIO_SMTP_PASS}
-      - DEPLOY_ENV=local # 本番時は production に変更
+      - DEPLOY_ENV=production # 本番時は production に変更　ローカルならlocal
+      - PORTFOLIO_DB_HOST=db
+      - PORTFOLIO_DB_PORT=3306
+      - PORTFOLIO_DB_NAME=portfolio_db
+      - PORTFOLIO_DB_USER=test_user
+      - PORTFOLIO_DB_PASS=test_pass
     ports:
-      - "8080:8080"
+      - "9143:8080"
     volumes:
       # ホスト側のパス : コンテナ内の固定パス
       # ローカル開発時はここを C:/MyAppData/portfolio_images に
       # ローカルデプロイ時はここを C:/MyAppData/portfolio_images:/img_mountに
-      # 本番デプロイ時はここを /var/www/portfolio/img/profile に書き換えます
-      - C:/MyAppData/portfolio_images:/img_mount
+      # 本番デプロイ時はここを /home/touma/uploads/profile:/img_mount に書き換えます
+      - /home/touma/uploads/profile:/img_mount
     depends_on:
       - db
 
   db:
     image: mysql:8.0
     container_name: touma-mysql-db
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: portfolio_db
