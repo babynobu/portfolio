@@ -9,7 +9,6 @@
 <title>設定</title>
 
 <style>
-/* Aパターン：学習用・最低限のレスポンシブ対応 */
 body {
   margin: 0;
   padding: 16px;
@@ -37,6 +36,7 @@ input[type="email"] {
   max-width: 520px;
   padding: 8px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 input[type="submit"], button {
@@ -63,12 +63,13 @@ input[type="submit"], button {
   <form action="<%=request.getContextPath()%>/ExecuteManagerSetting"
         method="post"
         enctype="multipart/form-data">
+
     <input type="hidden" name="userId" value="${managerSetting.userId}">
 
     <p>
       ログインID<br>
       <input type="text" name="loginId"
-             value="${empty param.loginId ? managerSetting.loginId : param.loginId}">
+             value="${param.loginId != null ? param.loginId : managerSetting.loginId}">
     </p>
     <c:if test="${not empty errors.loginId}">
       <div class="error">${errors.loginId}</div>
@@ -85,18 +86,16 @@ input[type="submit"], button {
     <p>
       名前<br>
       <input type="text" name="name"
-             value="${empty param.name ? managerSetting.name : param.name}">
+             value="${param.name != null ? param.name : managerSetting.name}">
     </p>
     <c:if test="${not empty errors.name}">
       <div class="error">${errors.name}</div>
     </c:if>
 
-    <!-- ★ 管理者設定では「ふりがな」を入力させない（項目削除） -->
-
     <p>
       メールアドレス<br>
       <input type="email" name="email"
-             value="${empty param.email ? managerSetting.email : param.email}">
+             value="${param.email != null ? param.email : managerSetting.email}">
     </p>
     <c:if test="${not empty errors.email}">
       <div class="error">${errors.email}</div>

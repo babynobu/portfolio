@@ -9,7 +9,6 @@
 <title>設定</title>
 
 <style>
-/* Aパターン：学習用・最低限のレスポンシブ対応 */
 body {
   margin: 0;
   padding: 16px;
@@ -37,6 +36,7 @@ input[type="email"] {
   max-width: 520px;
   padding: 8px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 input[type="submit"], button {
@@ -63,12 +63,13 @@ input[type="submit"], button {
   <form action="<%=request.getContextPath()%>/ExecuteGeneralSetting"
         method="post"
         enctype="multipart/form-data">
+
     <input type="hidden" name="userId" value="${generalSetting.userId}">
 
     <p>
       ログインID<br>
       <input type="text" name="loginId"
-             value="${empty param.loginId ? generalSetting.loginId : param.loginId}">
+             value="${param.loginId != null ? param.loginId : generalSetting.loginId}">
     </p>
     <c:if test="${not empty errors.loginId}">
       <div class="error">${errors.loginId}</div>
@@ -85,7 +86,7 @@ input[type="submit"], button {
     <p>
       メールアドレス<br>
       <input type="email" name="email"
-             value="${empty param.email ? generalSetting.email : param.email}">
+             value="${param.email != null ? param.email : generalSetting.email}">
     </p>
     <c:if test="${not empty errors.email}">
       <div class="error">${errors.email}</div>

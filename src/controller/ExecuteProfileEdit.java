@@ -26,8 +26,9 @@ public class ExecuteProfileEdit extends HttpServlet {
 	/**-----------------------------------------------
 	 * ■■■ExecuteProfileEditクラス■■■
 	 * 概要：プロフィール編集処理
-     -----------------------------------------------*/
+	 -----------------------------------------------*/
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -35,68 +36,86 @@ public class ExecuteProfileEdit extends HttpServlet {
 		UserInfoDto loginUser =
 				(session != null) ? (UserInfoDto) session.getAttribute("LOGIN_INFO") : null;
 
-				if (loginUser == null) {
-					response.sendRedirect(request.getContextPath() + "/LogIn");
-					return;
-				}
+		if (loginUser == null) {
+			response.sendRedirect(request.getContextPath() + "/LogIn");
+			return;
+		}
 
-				if (loginUser.getRole() != 0) {
-					response.sendRedirect(request.getContextPath() + "/ManagerDashboard");
-					return;
-				}
+		if (loginUser.getRole() != 0) {
+			response.sendRedirect(request.getContextPath() + "/ManagerDashboard");
+			return;
+		}
 
-				response.sendRedirect(request.getContextPath() + "/GeneralDashboard");
+		response.sendRedirect(request.getContextPath() + "/GeneralDashboard");
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 
+		// 0) ログイン・権限チェック
+		HttpSession session = request.getSession(false);
+		UserInfoDto loginUser =
+				(session != null) ? (UserInfoDto) session.getAttribute("LOGIN_INFO") : null;
+
+		if (loginUser == null) {
+			response.sendRedirect(request.getContextPath() + "/LogIn");
+			return;
+		}
+
+		if (loginUser.getRole() != 0) {
+			response.sendRedirect(request.getContextPath() + "/ManagerDashboard");
+			return;
+		}
+
 		Map<String, String> errors = new HashMap<>();
 
-		// ===== パラメータ（落ちないように String で受ける）=====
+		// 1) パラメータ取得
 		String userIdStr = request.getParameter("userId");
 		String name = request.getParameter("name");
 		String kana = request.getParameter("kana");
 		String genderStr = request.getParameter("gender");
 		String introduction = request.getParameter("introduction");
-		String ageStr = request.getParameter("age"); // ★追加
+		String ageStr = request.getParameter("age");
 
 		int userId = -1;
 		int gender = 0;
-		Integer age = null;               // ★追加
+		Integer age = null;
 		String profileImagePath = null;
 
-		// userId
-		if (userIdStr == null || userIdStr.isEmpty()) {
+		// 2) userId
+		if (userIdStr == null || userIdStr.trim().isEmpty()) {
 			errors.put("userId", "ユーザーIDが取得できません。");
 		} else {
 			try {
 				userId = Integer.parseInt(userIdStr);
-				if (userId <= 0) errors.put("userId", "ユーザーIDが不正です。");
+				if (userId <= 0) {
+					errors.put("userId", "ユーザーIDが不正です。");
+				}
 			} catch (Exception e) {
 				errors.put("userId", "ユーザーIDが不正です。");
 			}
 		}
 
-		// 名前
-		if (name == null || name.isEmpty()) {
+		// 3) 名前
+		if (name == null || name.trim().isEmpty()) {
 			errors.put("name", "名前は必須です。");
 		} else if (name.length() > 255) {
 			errors.put("name", "名前は255文字以内で入力してください。");
 		}
 
-		// ふりがな
-		if (kana == null || kana.isEmpty()) {
+		// 4) ふりがな
+		if (kana == null || kana.trim().isEmpty()) {
 			errors.put("kana", "ふりがなは必須です。");
 		} else if (!kana.matches("^[ぁ-んー 　]+$")) {
 			errors.put("kana", "ふりがなはひらがなのみで入力してください。");
 		}
 
-		// 性別
-		if (genderStr == null || genderStr.isEmpty()) {
+		// 5) 性別
+		if (genderStr == null || genderStr.trim().isEmpty()) {
 			errors.put("gender", "性別が選択されていません。");
 		} else {
 			try {
@@ -109,8 +128,8 @@ public class ExecuteProfileEdit extends HttpServlet {
 			}
 		}
 
-		// ★ 年齢（固定）
-		if (ageStr == null || ageStr.isEmpty()) {
+		// 6) 年齢
+		if (ageStr == null || ageStr.trim().isEmpty()) {
 			errors.put("age", "年齢は必須です。");
 		} else {
 			try {
@@ -125,61 +144,58 @@ public class ExecuteProfileEdit extends HttpServlet {
 			}
 		}
 
-		// 自己紹介
+		// 7) 自己紹介
 		if (introduction != null && introduction.length() > 1500) {
 			errors.put("introduction", "自己紹介は1500文字以内で入力してください。");
 		}
 
-		// ===== エラーがあれば戻す =====
+		// 8) エラーがあれば戻す
 		if (!errors.isEmpty()) {
 			forwardToForm(request, response, errors);
 			return;
 		}
 
-		// ===== プロフィール画像の受け取り・保存 =====
+		// 9) プロフィール画像
 		Part imagePart = request.getPart("profileImage");
 
 		if (imagePart != null && imagePart.getSize() > 0) {
 
-			long MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-			if (imagePart.getSize() > MAX_FILE_SIZE) {
+			long maxFileSize = 2 * 1024 * 1024; // 2MB
+			if (imagePart.getSize() > maxFileSize) {
 				errors.put("profileImage", "プロフィール画像は2MB以内でアップロードしてください。");
 				forwardToForm(request, response, errors);
 				return;
 			}
 
-			// 1. 保存先フォルダを取得（AppConfigの定数を使用）
 			String uploadDir = AppConfig.UPLOAD_DIR;
 
 			File dir = new File(uploadDir);
 			if (!dir.exists()) {
-				dir.mkdirs(); // フォルダがなければ作成
+				dir.mkdirs();
 			}
 
-			// 2. ファイル名を取得し、フルパスを組み立てて保存
 			String fileName = imagePart.getSubmittedFileName();
-			File saveFile = new java.io.File(dir, fileName);
+			File saveFile = new File(dir, fileName);
 
-			// 書き込み（絶対パスを指定）
 			imagePart.write(saveFile.getAbsolutePath());
 
-			// 3. DB保存用のパス文字列を作成（例: /img/profile/user5.png）
 			profileImagePath = AppConfig.IMAGE_PATH_PREFIX + fileName;
 		}
 
-		// ===== DTO =====
+		// 10) DTO
 		AccountDto dto = new AccountDto();
 		dto.setUserId(userId);
 		dto.setName(name);
 		dto.setKana(kana);
 		dto.setGender(gender);
-		dto.setAge(age); // ★追加
+		dto.setAge(age);
 		dto.setIntroduction(introduction);
 
 		if (profileImagePath != null) {
 			dto.setProfileImagePath(profileImagePath);
 		}
 
+		// 11) 更新処理
 		ProfileUpdateBL logic = new ProfileUpdateBL();
 
 		try {
@@ -191,9 +207,7 @@ public class ExecuteProfileEdit extends HttpServlet {
 				rd.forward(request, response);
 			} else {
 				request.setAttribute("errorMessage", "登録処理に失敗しました。");
-				RequestDispatcher rd =
-						request.getRequestDispatcher("/WEB-INF/view/profileEdit.jsp");
-				rd.forward(request, response);
+				forwardToForm(request, response, errors);
 			}
 
 		} catch (Exception e) {
@@ -209,12 +223,12 @@ public class ExecuteProfileEdit extends HttpServlet {
 	private void forwardToForm(HttpServletRequest request,
 			HttpServletResponse response,
 			Map<String, String> errors)
-					throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		request.setAttribute("errors", errors);
 
 		String userId = request.getParameter("userId");
-		if (userId != null && !userId.isEmpty()) {
+		if (userId != null && !userId.trim().isEmpty()) {
 			AccountDao dao = new AccountDao();
 			AccountDto dto = dao.selectEditAccount(userId);
 			request.setAttribute("profileEdit", dto);

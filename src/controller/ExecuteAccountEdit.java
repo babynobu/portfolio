@@ -26,8 +26,9 @@ public class ExecuteAccountEdit extends HttpServlet {
 	/**-----------------------------------------------
 	 * ■■■ExecuteAccountEditクラス■■■
 	 * 概要：アカウント編集処理
-     -----------------------------------------------*/
+	 -----------------------------------------------*/
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -35,24 +36,40 @@ public class ExecuteAccountEdit extends HttpServlet {
 		UserInfoDto loginUser =
 				(session != null) ? (UserInfoDto) session.getAttribute("LOGIN_INFO") : null;
 
-				if (loginUser == null) {
-					response.sendRedirect(request.getContextPath() + "/LogIn");
-					return;
-				}
+		if (loginUser == null) {
+			response.sendRedirect(request.getContextPath() + "/LogIn");
+			return;
+		}
 
-				if (loginUser.getRole() != 1) {
-					response.sendRedirect(request.getContextPath() + "/GeneralDashboard");
-					return;
-				}
+		if (loginUser.getRole() != 1) {
+			response.sendRedirect(request.getContextPath() + "/GeneralDashboard");
+			return;
+		}
 
-				response.sendRedirect(request.getContextPath() + "/AccountList");
+		response.sendRedirect(request.getContextPath() + "/AccountList");
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
+
+		// ■ 0) ログイン・権限チェック
+		HttpSession session = request.getSession(false);
+		UserInfoDto loginUser =
+				(session != null) ? (UserInfoDto) session.getAttribute("LOGIN_INFO") : null;
+
+		if (loginUser == null) {
+			response.sendRedirect(request.getContextPath() + "/LogIn");
+			return;
+		}
+
+		if (loginUser.getRole() != 1) {
+			response.sendRedirect(request.getContextPath() + "/GeneralDashboard");
+			return;
+		}
 
 		Map<String, String> errors = new HashMap<>();
 
@@ -68,13 +85,13 @@ public class ExecuteAccountEdit extends HttpServlet {
 		// general 用
 		int gender = 0;
 		String kana = null;
-		Integer age = null;              // ★追加
+		Integer age = null;
 		String introduction = null;
 		String profileImagePath = null;
 
 		// 2) userId parse
 		int userId = -1;
-		if (userIdParam == null || userIdParam.isEmpty()) {
+		if (userIdParam == null || userIdParam.trim().isEmpty()) {
 			errors.put("userId", "ユーザーIDが取得できません。");
 		} else {
 			try {
@@ -89,7 +106,7 @@ public class ExecuteAccountEdit extends HttpServlet {
 
 		// 3) role parse
 		int role = -1;
-		if (roleParam == null || roleParam.isEmpty()) {
+		if (roleParam == null || roleParam.trim().isEmpty()) {
 			errors.put("role", "権限が選択されていません。");
 		} else {
 			try {
@@ -104,7 +121,7 @@ public class ExecuteAccountEdit extends HttpServlet {
 
 		// 4) status parse
 		int status = -1;
-		if (statusParam == null || statusParam.isEmpty()) {
+		if (statusParam == null || statusParam.trim().isEmpty()) {
 			errors.put("status", "ステータスが選択されていません。");
 		} else {
 			try {
@@ -118,7 +135,7 @@ public class ExecuteAccountEdit extends HttpServlet {
 		}
 
 		// 5) 共通バリデーション
-		if (loginId == null || loginId.isEmpty()) {
+		if (loginId == null || loginId.trim().isEmpty()) {
 			errors.put("loginId", "ログインIDは必須です。");
 		} else if (loginId.length() > 255) {
 			errors.put("loginId", "ログインIDは255文字以内で入力してください。");
@@ -129,19 +146,19 @@ public class ExecuteAccountEdit extends HttpServlet {
 			}
 		}
 
-		if (password == null || password.isEmpty()) {
+		if (password == null || password.trim().isEmpty()) {
 			errors.put("password", "パスワードは必須です。");
 		} else if (!password.matches("^[a-zA-Z0-9_-]{8,32}$")) {
 			errors.put("password", "パスワードは8〜32文字の半角英数字と「_」「-」のみ使用できます。");
 		}
 
-		if (name == null || name.isEmpty()) {
+		if (name == null || name.trim().isEmpty()) {
 			errors.put("name", "名前は必須です。");
 		} else if (name.length() > 255) {
 			errors.put("name", "名前は255文字以内で入力してください。");
 		}
 
-		if (email == null || email.isEmpty()) {
+		if (email == null || email.trim().isEmpty()) {
 			errors.put("email", "メールアドレスは必須です。");
 		} else if (email.length() > 255) {
 			errors.put("email", "メールアドレスは255文字以内で入力してください。");
@@ -153,14 +170,14 @@ public class ExecuteAccountEdit extends HttpServlet {
 		if (role == 0) {
 
 			kana = request.getParameter("kana");
-			if (kana == null || kana.isEmpty()) {
+			if (kana == null || kana.trim().isEmpty()) {
 				errors.put("kana", "ふりがなは必須です。");
 			} else if (!kana.matches("^[ぁ-んー 　]+$")) {
 				errors.put("kana", "ふりがなはひらがなのみで入力してください。");
 			}
 
 			String genderParam = request.getParameter("gender");
-			if (genderParam == null || genderParam.isEmpty()) {
+			if (genderParam == null || genderParam.trim().isEmpty()) {
 				errors.put("gender", "性別が選択されていません。");
 			} else {
 				try {
@@ -173,9 +190,8 @@ public class ExecuteAccountEdit extends HttpServlet {
 				}
 			}
 
-			// ★ 年齢（固定）
 			String ageStr = request.getParameter("age");
-			if (ageStr == null || ageStr.isEmpty()) {
+			if (ageStr == null || ageStr.trim().isEmpty()) {
 				errors.put("age", "年齢は必須です。");
 			} else {
 				try {
@@ -215,22 +231,18 @@ public class ExecuteAccountEdit extends HttpServlet {
 					return;
 				}
 
-				// 1. 保存先フォルダを取得（AppConfigの定数を使用）
 				String uploadDir = AppConfig.UPLOAD_DIR;
 
 				File dir = new File(uploadDir);
 				if (!dir.exists()) {
-					dir.mkdirs(); // フォルダがなければ作成
+					dir.mkdirs();
 				}
 
-				// 2. ファイル名を取得し、フルパスを組み立てて保存
 				String fileName = imagePart.getSubmittedFileName();
-				File saveFile = new java.io.File(dir, fileName);
+				File saveFile = new File(dir, fileName);
 
-				// 書き込み（絶対パスを指定）
 				imagePart.write(saveFile.getAbsolutePath());
 
-				// 3. DB保存用のパス文字列を作成（例: /img/profile/user5.png）
 				profileImagePath = AppConfig.IMAGE_PATH_PREFIX + fileName;
 			}
 		}
@@ -249,7 +261,7 @@ public class ExecuteAccountEdit extends HttpServlet {
 		if (role == 0) {
 			dto.setKana(kana);
 			dto.setGender(gender);
-			dto.setAge(age); // ★追加
+			dto.setAge(age);
 			dto.setIntroduction(introduction);
 
 			if (profileImagePath != null) {
@@ -269,9 +281,7 @@ public class ExecuteAccountEdit extends HttpServlet {
 				rd.forward(request, response);
 			} else {
 				request.setAttribute("errorMessage", "更新処理に失敗しました。");
-				RequestDispatcher rd =
-						request.getRequestDispatcher("/WEB-INF/view/accountEdit.jsp");
-				rd.forward(request, response);
+				forwardToForm(request, response, errors);
 			}
 
 		} catch (Exception e) {
@@ -292,7 +302,7 @@ public class ExecuteAccountEdit extends HttpServlet {
 		request.setAttribute("errors", errors);
 
 		String userIdParam = request.getParameter("userId");
-		if (userIdParam != null && !userIdParam.isEmpty()) {
+		if (userIdParam != null && !userIdParam.trim().isEmpty()) {
 			AccountDao dao = new AccountDao();
 			AccountDto dto = dao.selectEditAccount(userIdParam);
 			request.setAttribute("account", dto);

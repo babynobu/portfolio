@@ -80,12 +80,13 @@ input[type="submit"], button {
   <form action="<%=request.getContextPath()%>/ExecuteProfileEdit"
         method="post"
         enctype="multipart/form-data">
+
     <input type="hidden" name="userId" value="${profileEdit.userId}">
 
     <p>
       名前<br>
       <input type="text" name="name"
-             value="${empty param.name ? profileEdit.name : param.name}">
+             value="${param.name != null ? param.name : profileEdit.name}">
     </p>
     <c:if test="${not empty errors.name}">
       <div class="error">${errors.name}</div>
@@ -94,7 +95,7 @@ input[type="submit"], button {
     <p>
       ふりがな<br>
       <input type="text" name="kana"
-             value="${empty param.kana ? profileEdit.kana : param.kana}">
+             value="${param.kana != null ? param.kana : profileEdit.kana}">
     </p>
     <c:if test="${not empty errors.kana}">
       <div class="error">${errors.kana}</div>
@@ -103,19 +104,24 @@ input[type="submit"], button {
     <p>
       性別<br>
       <span class="gender-area">
+        <c:set var="genderValue"
+               value="${param.gender != null ? param.gender : profileEdit.gender}" />
+
         <label>
           <input type="radio" name="gender" value="1"
-            ${ (empty param.gender ? profileEdit.gender : param.gender) == 1 ? 'checked' : '' }>
+            ${genderValue == 1 ? 'checked' : ''}>
           男性
         </label>
+
         <label>
           <input type="radio" name="gender" value="2"
-            ${ (empty param.gender ? profileEdit.gender : param.gender) == 2 ? 'checked' : '' }>
+            ${genderValue == 2 ? 'checked' : ''}>
           女性
         </label>
+
         <label>
           <input type="radio" name="gender" value="3"
-            ${ (empty param.gender ? profileEdit.gender : param.gender) == 3 ? 'checked' : '' }>
+            ${genderValue == 3 ? 'checked' : ''}>
           その他
         </label>
       </span>
@@ -124,11 +130,10 @@ input[type="submit"], button {
       <div class="error">${errors.gender}</div>
     </c:if>
 
-    <!-- ★ 生年月日 → 年齢 -->
     <p>
       年齢<br>
       <input type="number" name="age" min="0" max="999"
-             value="${empty param.age ? profileEdit.age : param.age}">
+             value="${param.age != null ? param.age : profileEdit.age}">
     </p>
     <c:if test="${not empty errors.age}">
       <div class="error">${errors.age}</div>
@@ -136,7 +141,7 @@ input[type="submit"], button {
 
     <p>
       自己紹介<br>
-      <textarea name="introduction">${empty param.introduction ? profileEdit.introduction : param.introduction}</textarea>
+      <textarea name="introduction">${param.introduction != null ? param.introduction : profileEdit.introduction}</textarea>
     </p>
     <c:if test="${not empty errors.introduction}">
       <div class="error">${errors.introduction}</div>

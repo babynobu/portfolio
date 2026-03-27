@@ -25,10 +25,10 @@ public class ExecuteManagerSetting extends HttpServlet {
      * 概要：プロフィール編集処理
      -----------------------------------------------*/
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // セッションチェック
         HttpSession session = request.getSession(false);
         UserInfoDto loginUser =
                 (session != null) ? (UserInfoDto) session.getAttribute("LOGIN_INFO") : null;
@@ -38,7 +38,6 @@ public class ExecuteManagerSetting extends HttpServlet {
             return;
         }
 
-        // 管理者のみ許可
         if (loginUser.getRole() != 1) {
             response.sendRedirect(request.getContextPath() + "/GeneralDashboard");
             return;
@@ -47,24 +46,40 @@ public class ExecuteManagerSetting extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/ManagerSetting");
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
+        // 0) ログイン・権限チェック
+        HttpSession session = request.getSession(false);
+        UserInfoDto loginUser =
+                (session != null) ? (UserInfoDto) session.getAttribute("LOGIN_INFO") : null;
+
+        if (loginUser == null) {
+            response.sendRedirect(request.getContextPath() + "/LogIn");
+            return;
+        }
+
+        if (loginUser.getRole() != 1) {
+            response.sendRedirect(request.getContextPath() + "/GeneralDashboard");
+            return;
+        }
+
         Map<String, String> errors = new HashMap<>();
 
-        // ===== パラメータ =====
+        // 1) パラメータ取得
         String userIdParam = request.getParameter("userId");
         String loginId     = request.getParameter("loginId");
         String password    = request.getParameter("password");
         String name        = request.getParameter("name");
         String email       = request.getParameter("email");
 
-        // ===== userId parse（未指定/改ざん対策）=====
+        // 2) userId parse
         int userId = -1;
-        if (userIdParam == null || userIdParam.isEmpty()) {
+        if (userIdParam == null || userIdParam.trim().isEmpty()) {
             errors.put("userId", "ユーザーIDが取得できません。");
         } else {
             try {
@@ -77,8 +92,8 @@ public class ExecuteManagerSetting extends HttpServlet {
             }
         }
 
-        // ===== バリデーション =====
-        if (loginId == null || loginId.isEmpty()) {
+        // 3) バリデーション
+        if (loginId == null || loginId.trim().isEmpty()) {
             errors.put("loginId", "ログインIDは必須です。");
         } else if (loginId.length() > 255) {
             errors.put("loginId", "ログインIDは255文字以内で入力してください。");
@@ -89,21 +104,19 @@ public class ExecuteManagerSetting extends HttpServlet {
             }
         }
 
-        if (password == null || password.isEmpty()) {
+        if (password == null || password.trim().isEmpty()) {
             errors.put("password", "パスワードは必須です。");
         } else if (!password.matches("^[a-zA-Z0-9_-]{8,32}$")) {
             errors.put("password", "パスワードは8〜32文字の半角英数字と「_」「-」のみ使用できます。");
         }
 
-        if (name == null || name.isEmpty()) {
+        if (name == null || name.trim().isEmpty()) {
             errors.put("name", "名前は必須です。");
         } else if (name.length() > 255) {
             errors.put("name", "名前は255文字以内で入力してください。");
         }
 
-        // ★ 管理者設定では kana を扱わない（取得もバリデーションもなし）
-
-        if (email == null || email.isEmpty()) {
+        if (email == null || email.trim().isEmpty()) {
             errors.put("email", "メールアドレスは必須です。");
         } else if (email.length() > 255) {
             errors.put("email", "メールアドレスは255文字以内で入力してください。");
@@ -111,21 +124,21 @@ public class ExecuteManagerSetting extends HttpServlet {
             errors.put("email", "メールアドレスの形式が正しくありません。");
         }
 
-        // ===== エラーがあれば戻す =====
+        // 4) エラーがあれば戻す
         if (!errors.isEmpty()) {
             forwardToForm(request, response, errors);
             return;
         }
 
-        // ===== ここまで来たら入力はOK =====
+        // 5) DTOへ詰める
         AccountDto dto = new AccountDto();
-
         dto.setUserId(userId);
         dto.setLoginId(loginId);
         dto.setPassword(password);
         dto.setName(name);
         dto.setEmail(email);
 
+        // 6) 更新処理
         ManagerSettingUpdateBL logic = new ManagerSettingUpdateBL();
 
         try {
@@ -137,9 +150,7 @@ public class ExecuteManagerSetting extends HttpServlet {
                 rd.forward(request, response);
             } else {
                 request.setAttribute("errorMessage", "登録処理に失敗しました。");
-                RequestDispatcher rd =
-                        request.getRequestDispatcher("/WEB-INF/view/managerSetting.jsp");
-                rd.forward(request, response);
+                forwardToForm(request, response, errors);
             }
 
         } catch (Exception e) {
@@ -161,7 +172,7 @@ public class ExecuteManagerSetting extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         UserInfoDto loginUser =
-            (session != null) ? (UserInfoDto) session.getAttribute("LOGIN_INFO") : null;
+                (session != null) ? (UserInfoDto) session.getAttribute("LOGIN_INFO") : null;
 
         if (loginUser != null) {
             AccountDao dao = new AccountDao();

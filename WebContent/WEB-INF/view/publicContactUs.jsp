@@ -9,7 +9,6 @@
 <title>お問い合わせ</title>
 
 <style>
-/* Aパターン：学習用・最低限のレスポンシブ対応 */
 body {
   margin: 0;
   padding: 16px;

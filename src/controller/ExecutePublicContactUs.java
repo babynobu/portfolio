@@ -23,13 +23,14 @@ import util.MailUtil;
  -----------------------------------------------*/
 public class ExecutePublicContactUs extends HttpServlet {
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // GETで来たらフォームへ
         response.sendRedirect(request.getContextPath() + "/PublicContactUs");
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -38,20 +39,27 @@ public class ExecutePublicContactUs extends HttpServlet {
 
         Map<String, String> errors = new HashMap<>();
 
-        // ===== パラメータ =====
+        // 1) パラメータ取得
         String email = request.getParameter("email");
         String categoryIdStr = request.getParameter("categoryId");
         String body = request.getParameter("body");
 
-        Integer categoryId = null;
-        try {
-            categoryId = Integer.valueOf(categoryIdStr);
-        } catch (Exception e) {
-            // 未選択/不正
-        }
+        // 2) 再表示用の入力値を先にセット
+        request.setAttribute("inputEmail", email);
+        request.setAttribute("inputBody", body);
 
-        // ===== バリデーション =====
-        if (email == null || email.isEmpty()) {
+        Integer categoryId = null;
+        if (categoryIdStr != null && !categoryIdStr.trim().isEmpty()) {
+            try {
+                categoryId = Integer.valueOf(categoryIdStr);
+            } catch (Exception e) {
+                // 不正値は後続バリデーションでエラーにする
+            }
+        }
+        request.setAttribute("inputCategoryId", categoryId);
+
+        // 3) バリデーション
+        if (email == null || email.trim().isEmpty()) {
             errors.put("email", "返信用メールアドレスは必須です。");
         } else if (email.length() > 255) {
             errors.put("email", "返信用メールアドレスは255文字以内で入力してください。");
@@ -63,23 +71,19 @@ public class ExecutePublicContactUs extends HttpServlet {
             errors.put("categoryId", "問い合わせカテゴリーを選択してください。");
         }
 
-        if (body == null || body.isEmpty()) {
+        if (body == null || body.trim().isEmpty()) {
             errors.put("body", "本文は必須です。");
         } else if (body.length() > 1000) {
             errors.put("body", "本文は1000文字以内で入力してください。");
         }
 
-        // ===== エラーがあれば戻す =====
+        // 4) エラーがあれば戻す
         if (!errors.isEmpty()) {
-            request.setAttribute("inputEmail", email);
-            request.setAttribute("inputCategoryId", categoryId);
-            request.setAttribute("inputBody", body);
-
             forwardToForm(request, response, errors);
             return;
         }
 
-        // ===== 登録DTO =====
+        // 5) 登録DTO
         PublicContactUsDto dto = new PublicContactUsDto();
         dto.setEmail(email);
         dto.setCategoryId(categoryId);
@@ -91,16 +95,13 @@ public class ExecutePublicContactUs extends HttpServlet {
             boolean result = logic.insert(dto);
 
             if (result) {
-                // メール本文作成
                 String categoryName = resolveCategoryName(categoryId);
                 String subject = "【受付完了】お問い合わせを受け付けました";
                 String mailBody = buildReceiptMailText(email, categoryName, body);
 
                 try {
-                    // ★メール送信（失敗してもDB登録は成功している）
                     MailUtil.sendContactReceipt(email, subject, mailBody);
 
-                    // メール送信成功：通常の完了画面
                     RequestDispatcher rd =
                             request.getRequestDispatcher("/WEB-INF/view/publicContactUsComplete.jsp");
                     rd.forward(request, response);
@@ -108,7 +109,6 @@ public class ExecutePublicContactUs extends HttpServlet {
                 } catch (Exception mailEx) {
                     mailEx.printStackTrace();
 
-                    // メール送信失敗：専用画面へ
                     request.setAttribute("mailErrorMessage",
                             "お問い合わせは受け付けましたが、確認メールの送信に失敗しました。"
                           + "入力したメールアドレスをご確認のうえ、必要であれば再度お問い合わせください。");
@@ -120,7 +120,7 @@ public class ExecutePublicContactUs extends HttpServlet {
 
             } else {
                 request.setAttribute("errorMessage", "送信処理に失敗しました。");
-                forwardToForm(request, response, new HashMap<>());
+                forwardToForm(request, response, errors);
             }
 
         } catch (Exception e) {
@@ -136,7 +136,7 @@ public class ExecutePublicContactUs extends HttpServlet {
     private void forwardToForm(HttpServletRequest request,
             HttpServletResponse response,
             Map<String, String> errors)
-                    throws ServletException, IOException {
+            throws ServletException, IOException {
 
         CategoryDao categoryDao = new CategoryDao();
         List<CategoryDto> categories = categoryDao.selectActiveCategoryList();
@@ -160,7 +160,7 @@ public class ExecutePublicContactUs extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            // 失敗してもメールは送れるようにする（名称不明）
+            // 失敗してもメールは送れるようにする
         }
         return "（不明）";
     }
